@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -12,10 +13,37 @@ class PageController extends Controller
      * @param string $page
      * @return \Illuminate\View\View
      */
+
+    private function pageQuery($page){
+        switch ($page) {
+            case 'my-documents':
+                // Handle home page query
+               return Document::paginate(10);
+                break;
+            case 'tables':
+                // Handle home page query
+               return Document::paginate(10);
+                break;
+            case 'billing':
+                return Document::paginate(10);
+                break;
+            case 'tables':
+                return Document::paginate(10);
+                break;
+            case 'user-management':
+                return Document::paginate(10);
+                break;
+            default:
+                    abort(404);
+                // Handle default case if $page doesn't match any of the above cases
+                break;
+        }
+    }
     public function index(string $page)
     {
         if (view()->exists("pages.{$page}")) {
-            return view("pages.{$page}");
+            $data = $this->pageQuery($page);
+            return view("pages.{$page}", compact('data'));
         }
 
         return abort(404);

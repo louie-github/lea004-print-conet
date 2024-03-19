@@ -3,7 +3,7 @@
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Your Profile'])
     <div class="card shadow-lg mx-4 card-profile-bottom">
-        <div class="card-body p-3">
+        {{-- <div class="card-body p-3">
             <div class="row gx-4">
                 <div class="col-auto">
                     <div class="avatar avatar-xl position-relative">
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     <div id="alert">
         @include('components.alert')
@@ -94,8 +94,8 @@
                                 </div>
                             </div>
                             <hr class="horizontal dark">
-                            <p class="text-uppercase text-sm">Contact Information</p>
-                            <div class="row">
+                            {{-- <p class="text-uppercase text-sm">Contact Information</p> --}}
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Address</label>
@@ -121,9 +121,9 @@
                                         <input class="form-control" type="text" name="postal" value="{{ old('postal', auth()->user()->postal) }}">
                                     </div>
                                 </div>
-                            </div>
-                            <hr class="horizontal dark">
-                            <p class="text-uppercase text-sm">About me</p>
+                            </div> --}}
+                            {{-- <hr class="horizontal dark"> --}}
+                            {{-- <p class="text-uppercase text-sm">About me</p>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -132,7 +132,7 @@
                                             value="{{ old('about', auth()->user()->about) }}">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -150,7 +150,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
+                    {{-- <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
                         <div class="d-flex justify-content-between">
                             <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-none d-lg-block">Connect</a>
                             <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i
@@ -160,39 +160,40 @@
                             <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i
                                     class="ni ni-email-83"></i></a>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col">
                                 <div class="d-flex justify-content-center">
                                     <div class="d-grid text-center">
-                                        <span class="text-lg font-weight-bolder">22</span>
-                                        <span class="text-sm opacity-8">Friends</span>
+                                        <span class="text-lg font-weight-bolder">{{ auth()->user()->username ?? 'Username' }}</span>
+                                        <span class="text-sm opacity-8"> {{ auth()->user()->email ?? 'Email' }} </span>
                                     </div>
-                                    <div class="d-grid text-center mx-4">
+                                    {{-- <div class="d-grid text-center mx-4">
                                         <span class="text-lg font-weight-bolder">10</span>
                                         <span class="text-sm opacity-8">Photos</span>
                                     </div>
                                     <div class="d-grid text-center">
                                         <span class="text-lg font-weight-bolder">89</span>
                                         <span class="text-sm opacity-8">Comments</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
                         <div class="text-center mt-4">
                             <h5>
-                                Mark Davis<span class="font-weight-light">, 35</span>
+                                {{ auth()->user()->firstname ?? 'Firstname' }} {{ auth()->user()->lastname ?? 'Lastname' }}
+                                {{-- <span class="font-weight-light">, 35</span> --}}
                             </h5>
-                            <div class="h6 font-weight-300">
-                                <i class="ni location_pin mr-2"></i>Bucharest, Romania
-                            </div>
-                            <div class="h6 mt-4">
+                            {{-- <div class="h6 font-weight-100">
+                                <i class="ni location_pin mr-2"></i>{{auth()->user()->email ?? 'Email'}}
+                            </div> --}}
+                            {{-- <div class="h6 mt-4">
                                 <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
                             </div>
                             <div>
                                 <i class="ni education_hat mr-2"></i>University of Computer Science
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
