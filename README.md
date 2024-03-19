@@ -7,7 +7,7 @@ https://laravel.com/docs/10.x
 First clone this repository, install the dependencies, and setup your .env file.
 
 ```
-git clone git@github.com:JeffreyWay/Laravel-From-Scratch-Blog-Project.git blog
+git clone git@github.com:louie-github/lea004-print-conet.git
 composer install
 cp .env.example .env
 ```
