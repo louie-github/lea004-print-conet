@@ -23,7 +23,8 @@ app = FastAPI()
 class PrintJob(BaseModel):
     filename: str
     transaction_id: str
-    has_color: Optional[bool] = Field(default=False)
+    total_payment: int,
+    has_color: Optional[bool] = Field(default=True)
     page_start: Optional[int] = Field(default=0)
     page_end: Optional[int] = Field(default=0)
     num_copies: Optional[int] = Field(default=1)
