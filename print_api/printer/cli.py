@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from typing import Optional
+from typing import Dict, Optional, Tuple
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -23,11 +23,14 @@ app = FastAPI()
 class PrintJob(BaseModel):
     filename: str
     transaction_id: str
-    total_payment: int,
+    total_payment: int
     has_color: Optional[bool] = Field(default=True)
     page_start: Optional[int] = Field(default=0)
     page_end: Optional[int] = Field(default=0)
     num_copies: Optional[int] = Field(default=1)
+
+
+CURRENT_JOBS: Dict[str, Tuple[PrintJob, int]] = {}
 
 
 @app.get("/status/")
@@ -46,8 +49,35 @@ async def api_read_status():
         )
 
 
+def check_payment_status(transaction_id: str):
+    # TODO: Implement real payment checking.
+    return {
+        "total_payment": CURRENT_JOBS[transaction_id][0].total_payment,
+        "amount_collected": CURRENT_JOBS[transaction_id][0].total_payment,
+        "amount_needed": 0,
+    }
+
+
+@app.get("/payment/{transaction_id}")
+async def api_check_payment_status(transaction_id: str):
+    return check_payment_status(transaction_id)
+
+
 @app.post("/print/")
 async def api_print_file(job: PrintJob):
+    if job.transaction_id not in CURRENT_JOBS:
+        CURRENT_JOBS[job.transaction_id] = (job, 0)
+        return {
+            "message": "Print job has been queued. Waiting for payment.",
+            "job": jsonable_encoder(job),
+        }
+    payment_status = check_payment_status(job.transaction_id)
+    if payment_status["amount_needed"] != 0:
+        return {
+            "message": "Print job is currently queued and awaiting complete payment.",
+            "job": jsonable_encoder(job),
+            "payment_status": jsonable_encoder(payment_status),
+        }
     try:
         print_file(app.state.printer_handle, job.filename)
     except FileNotFoundError:
@@ -68,8 +98,9 @@ async def api_print_file(job: PrintJob):
             },
         )
     else:
+        CURRENT_JOBS.pop(job.transaction_id)
         return {
-            "message": "Print job sent.",
+            "message": "Payment complete. Print job sent.",
             "job": jsonable_encoder(job),
         }
 
