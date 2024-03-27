@@ -1,4 +1,4 @@
-# LPRINTER KIOSK WEB
+# PRINTER KIOSK WEB
 
 https://laravel.com/docs/10.x
 
@@ -40,3 +40,31 @@ email: admin@test.com
 pass: secret
 
 ```
+
+# Backend printing API
+Basic usage:
+ - /print - POST request; print files with specified settings
+ - /status - GET request; get current printer status
+ - /docs - auto-generated API docs using Swagger and FastAPI
+
+## Installation
+First, install [Python 3.10](https://www.python.org/) or greater and
+[Poetry](https://python-poetry.org/docs/#installation) for
+dependency management.
+
+Then, navigate to [print_api](/print_api/) and set up the project by
+running:
+```
+poetry install
+```
+
+To start the server, run:
+```
+poetry run cli api
+```
+
+A FastAPI server should start running on localhost port 48250. To view
+the auto-generated API documentation, navigate to
+http://localhost:48520/docs.
+
+To stop the server, press Ctrl+C.
