@@ -129,7 +129,7 @@ def print_file(
     if not is_readable_pdf(filename):
         raise ValueError("Invalid PDF file: {fpath}")
     command = generate_print_command(
-        filename,
+        str(fpath),
         printer_name=printer_name,
         has_color=has_color,
         num_copies=num_copies,
