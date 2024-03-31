@@ -84,7 +84,7 @@ async def queue_print_job(job: PrintJob):
             "payment_status": jsonable_encoder(payment_status),
         }
 
-    if payment_status["amount_needed"] != 0:
+    if payment_status["amount_needed"] >= 0:
         return {
             "message": "Print job is currently queued and awaiting complete payment.",
             "job": jsonable_encoder(job),
