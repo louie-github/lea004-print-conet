@@ -76,13 +76,19 @@ async def queue_print_job(job: PrintJob):
 
     payment_status = _check_payment_status(job_id)
 
+    # If the transaction ID already exists, either delete the job when
+    # filename is blank or replace the job with the new parameters,
+    # keeping the current payment value the same.
     if CURRENT_JOBS[job_id][0].filename != job.filename:
-        CURRENT_JOBS[job_id] = (job, CURRENT_JOBS[job_id][1])
-        return {
-            "message": "New print job has replaced old print job. Waiting for payment.",
-            "job": jsonable_encoder(job),
-            "payment_status": jsonable_encoder(payment_status),
-        }
+        if job.filename == "":
+            del CURRENT_JOBS[job_id]
+        else:
+            CURRENT_JOBS[job_id] = (job, CURRENT_JOBS[job_id][1])
+            return {
+                "message": "New print job has replaced old print job. Waiting for payment.",
+                "job": jsonable_encoder(job),
+                "payment_status": jsonable_encoder(payment_status),
+            }
 
     if payment_status["amount_needed"] >= 0:
         return {
