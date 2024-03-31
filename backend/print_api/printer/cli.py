@@ -65,14 +65,25 @@ async def check_payment_status(transaction_id: str):
 
 @app.post("/print/")
 async def queue_print_job(job: PrintJob):
-    if job.transaction_id not in CURRENT_JOBS:
-        CURRENT_JOBS[job.transaction_id] = (job, 0)
+    job_id = job.transaction_id
+
+    if job_id not in CURRENT_JOBS:
+        CURRENT_JOBS[job_id] = (job, 0)
         return {
             "message": "Print job has been queued. Waiting for payment.",
             "job": jsonable_encoder(job),
         }
 
-    payment_status = _check_payment_status(job.transaction_id)
+    payment_status = _check_payment_status(job_id)
+
+    if CURRENT_JOBS[job_id][0].filename != job.filename:
+        CURRENT_JOBS[job_id] = (job, CURRENT_JOBS[job_id][1])
+        return {
+            "message": "New print job has replaced old print job. Waiting for payment.",
+            "job": jsonable_encoder(job),
+            "payment_status": jsonable_encoder(payment_status),
+        }
+
     if payment_status["amount_needed"] != 0:
         return {
             "message": "Print job is currently queued and awaiting complete payment.",
@@ -103,7 +114,7 @@ async def queue_print_job(job: PrintJob):
             },
         )
     else:
-        CURRENT_JOBS.pop(job.transaction_id)
+        CURRENT_JOBS.pop(job_id)
         return {
             "message": "Payment complete. Print job sent.",
             "job": jsonable_encoder(job),
