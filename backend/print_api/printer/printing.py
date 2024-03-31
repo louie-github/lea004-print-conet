@@ -8,6 +8,8 @@ from pathlib import Path
 
 import win32print
 
+from .pdf import get_num_pages
+
 PRINTER_STATUS_CODES = {
     win32print.PRINTER_STATUS_BUSY: "BUSY",
     win32print.PRINTER_STATUS_DOOR_OPEN: "DOOR_OPEN",
@@ -95,15 +97,13 @@ def generate_print_command(
 
     if page_start == 0 and page_end == 0:
         pass
-    elif page_start == 0 and page_end != 0:
-        print_settings.append(f"1-{page_end}")
-    elif page_start != 0 and page_end == 0:
-        raise NotImplementedError(
-            "Please indicate page_end; we currently cannot read the "
-            "number of pages in the PDF."
-        )
     else:
+        if page_start == 0:
+            page_start = 1
+        if page_end == 0:
+            page_end = get_num_pages(filename)
         print_settings.append(f"{page_start}-{page_end}")
+
     print_settings.append("fit")  # TODO: Add config for page fit
     print_settings.append(f"{num_copies}x")
     print_settings.append("color" if has_color else "monochrome")
@@ -123,8 +123,6 @@ def print_file(
     page_end: int = 0,
 ):
     printer_name = get_printer_status(printer_handle)["name"]
-    # TODO: Verify that filename is supported (PDF)
-    # TODO: Verify that file is actually PDF and printable
     fpath = Path(filename).resolve()
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")
