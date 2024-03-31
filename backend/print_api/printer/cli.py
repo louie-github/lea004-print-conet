@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -24,10 +24,10 @@ class PrintJob(BaseModel):
     filename: str
     transaction_id: str
     total_payment: int
-    has_color: Optional[bool] = Field(default=True)
-    page_start: Optional[int] = Field(default=0)
-    page_end: Optional[int] = Field(default=0)
-    num_copies: Optional[int] = Field(default=1)
+    has_color: bool = Field(default=True)
+    page_start: int = Field(default=0)
+    page_end: int = Field(default=0)
+    num_copies: int = Field(default=1)
 
 
 CURRENT_JOBS: Dict[str, Tuple[PrintJob, int]] = {}
@@ -81,14 +81,17 @@ async def queue_print_job(job: PrintJob):
         }
 
     try:
-        print_file(app.state.printer_handle, job.filename)
+        print_file(
+            app.state.printer_handle,
+            job.filename,
+            has_color=job.has_color,
+            page_start=job.page_start,
+            page_end=job.page_end,
+            num_copies=job.num_copies,
+        )
     except FileNotFoundError:
         raise HTTPException(
-            404,
-            {
-                "message": "File could not be found.",
-                "job": jsonable_encoder(job),
-            },
+            404, {"message": "File could not be found.", "job": jsonable_encoder(job)}
         )
     except Exception as e:
         raise HTTPException(

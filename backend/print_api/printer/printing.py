@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
+import shlex
+import subprocess
 from pathlib import Path
 
-import win32api
 import win32print
 
 PRINTER_STATUS_CODES = {
@@ -75,11 +77,64 @@ def get_printer_status(printer_handle):
     }
 
 
-def print_file(printer_handle, filename):
+def generate_print_command(
+    filename: str,
+    printer_name=None,
+    has_color: bool = True,
+    num_copies: int = 1,
+    page_start: int = 0,
+    page_end: int = 0,
+):
+    command = ["sumatrapdf.exe"]
+    print_settings = []
+
+    if printer_name is None:
+        command.append("-print-to-default")
+    else:
+        command.extend(["-print-to", printer_name])
+
+    if page_start == 0 and page_end == 0:
+        pass
+    elif page_start == 0 and page_end != 0:
+        print_settings.append(f"1-{page_end}")
+    elif page_start != 0 and page_end == 0:
+        raise NotImplementedError(
+            "Please indicate page_end; we currently cannot read the "
+            "number of pages in the PDF."
+        )
+    else:
+        print_settings.append(f"{page_start}-{page_end}")
+    print_settings.append("fit")  # TODO: Add config for page fit
+    print_settings.append(f"{num_copies}x")
+    print_settings.append("color" if has_color else "monochrome")
+
+    command.append("-print-settings")
+    command.append(",".join(print_settings))
+    command.append(filename)
+    return command
+
+
+def print_file(
+    printer_handle,
+    filename: str,
+    has_color: bool = True,
+    num_copies: int = 1,
+    page_start: int = 0,
+    page_end: int = 0,
+):
     printer_name = get_printer_status(printer_handle)["name"]
     # TODO: Verify that filename is supported (PDF)
     # TODO: Verify that file is actually PDF and printable
     fpath = Path(filename).resolve()
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")
-    win32api.ShellExecute(0, "print", str(fpath), f'/d:"{printer_name}"', ".", 0)
+    command = generate_print_command(
+        filename,
+        printer_name=printer_name,
+        has_color=has_color,
+        num_copies=num_copies,
+        page_start=page_start,
+        page_end=page_end,
+    )
+    logging.info(f"Running PRINT command: {shlex.join(command)}")
+    return subprocess.run(command)
