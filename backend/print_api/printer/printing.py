@@ -8,7 +8,7 @@ from pathlib import Path
 
 import win32print
 
-from .pdf import get_num_pages
+from .pdf import get_num_pages, is_readable_pdf
 
 PRINTER_STATUS_CODES = {
     win32print.PRINTER_STATUS_BUSY: "BUSY",
@@ -126,6 +126,8 @@ def print_file(
     fpath = Path(filename).resolve()
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")
+    if not is_readable_pdf(filename):
+        raise ValueError("Invalid PDF file: {fpath}")
     command = generate_print_command(
         filename,
         printer_name=printer_name,
