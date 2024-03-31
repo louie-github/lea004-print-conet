@@ -34,7 +34,7 @@ CURRENT_JOBS: Dict[str, Tuple[PrintJob, int]] = {}
 
 
 @app.get("/status/")
-async def api_read_status():
+async def read_status():
     try:
         return get_printer_status(app.state.printer_handle)
     except AttributeError:
@@ -49,7 +49,7 @@ async def api_read_status():
         )
 
 
-def check_payment_status(transaction_id: str):
+def _check_payment_status(transaction_id: str):
     # TODO: Implement real payment checking.
     return {
         "total_payment": CURRENT_JOBS[transaction_id][0].total_payment,
@@ -59,25 +59,27 @@ def check_payment_status(transaction_id: str):
 
 
 @app.get("/payment/{transaction_id}")
-async def api_check_payment_status(transaction_id: str):
-    return check_payment_status(transaction_id)
+async def check_payment_status(transaction_id: str):
+    return _check_payment_status(transaction_id)
 
 
 @app.post("/print/")
-async def api_print_file(job: PrintJob):
+async def queue_print_job(job: PrintJob):
     if job.transaction_id not in CURRENT_JOBS:
         CURRENT_JOBS[job.transaction_id] = (job, 0)
         return {
             "message": "Print job has been queued. Waiting for payment.",
             "job": jsonable_encoder(job),
         }
-    payment_status = check_payment_status(job.transaction_id)
+
+    payment_status = _check_payment_status(job.transaction_id)
     if payment_status["amount_needed"] != 0:
         return {
             "message": "Print job is currently queued and awaiting complete payment.",
             "job": jsonable_encoder(job),
             "payment_status": jsonable_encoder(payment_status),
         }
+
     try:
         print_file(app.state.printer_handle, job.filename)
     except FileNotFoundError:
@@ -105,7 +107,7 @@ async def api_print_file(job: PrintJob):
         }
 
 
-def print_printer_status(printer_handle):
+def log_printer_status(printer_handle):
     printer_status = get_printer_status(printer_handle)
     logging.info("Printer status:")
     logging.info(f"  - Name: {printer_status["name"]}")
@@ -116,7 +118,7 @@ def print_printer_status(printer_handle):
 
 
 def cli_main(printer_handle):
-    print_printer_status(printer_handle)
+    log_printer_status(printer_handle)
 
 
 def main(args=__import__("sys").argv[1:]):
