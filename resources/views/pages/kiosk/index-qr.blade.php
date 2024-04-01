@@ -24,13 +24,18 @@
     .content {
         display: none;
     }
+    /* Initially hide the main content */
+    .main-content {
+        display: none;
+    }
+    
 </style>
 
 @section('content')
 <div class="loading-container" id="loadingContainer">
     <div class="loading-spinner"></div>
 </div>
-    <main class="main-content mt-0">
+    <main class="main-content mt-0"  id="mainContent">
         <section id="payment_details_kiosk">
             <div class="page-header min-vh-100">
                 <div class="container">
@@ -243,13 +248,16 @@
 
         //simulate loading
         const loadingContainer = document.getElementById('loadingContainer');
-        const content = document.getElementById('content');
+        const mainContent = document.getElementById('mainContent');
+
+        // Show loading animation
+        loadingContainer.style.display = 'flex';
 
         // Simulate loading time
         setTimeout(function () {
-            loadingContainer.style.display = 'none';
-            content.style.display = 'block';
-        }, 1000); // Adjust the time as needed (in milliseconds)
+            loadingContainer.style.display = 'none'; // Hide loading animation
+            mainContent.style.display = 'block'; // Show main content
+        }, 2000); // Adjust the time as needed (in milliseconds)
     });
 
 

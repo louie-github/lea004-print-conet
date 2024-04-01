@@ -31,6 +31,7 @@ class KioskController extends Controller
     public function loadContent(Request $request) {
     // Perform any necessary operations to fetch data
         $transaction = Transaction::latest()
+        ->where('status', Transaction::TS_IN_PROCESS)
         ->first();
         //current cache id
         $currentUuid =  Cache::get('cache-current-key');
