@@ -37,7 +37,9 @@
                                 $transaction = App\Models\Transaction::latest()->first();
                             @endphp
 
-                            <iframe id="pdf-iframe" class="mb-5" src="{{ route('pdf.viewer', ['id' => $transaction->document_id]) }}" width="100%" height="620px"></iframe>
+                            @if ($transaction)
+                                <iframe id="pdf-iframe" class="mb-5" src="{{ route('pdf.viewer', ['id' => $transaction->document_id]) }}" width="100%" height="620px"></iframe>
+                            @endif
 
                         </div>
                     </div>
@@ -128,7 +130,7 @@
                         document.getElementById('totalAmount').innerText = totalAmount;
 
                         // Update the iframe source only if the transaction ID changes
-                        if (documentId != '{{ $transaction->document_id }}') {
+                        if (documentId != '{{ $transaction->document_id ?? 'default_document_id' }}') {
                             const iframeElement = document.querySelector('#pdf-iframe');
                             iframeElement.src = '{{ route('pdf.viewer', ['id' => 'TRANSACTION_DOCUMENT_ID']) }}'.replace('TRANSACTION_DOCUMENT_ID', data.transactions.document_id);
                             location.reload();
@@ -188,7 +190,7 @@
                     // Add any other headers or authentication tokens as needed
                 },
                 body: JSON.stringify({
-                    transactionId: '{{ $transaction->id }}', // Include the transaction ID in the request body
+                    transactionId: '{{ $transaction->id ?? 'default_document_id' }}', // Include the transaction ID in the request body
                     cancellationReason: 'User cancelled the transaction' // Optional: Add a reason for cancellation
                 })
             })
