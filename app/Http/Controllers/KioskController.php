@@ -34,17 +34,18 @@ class KioskController extends Controller
         //current cache id
         $currentUuid =  Cache::get('cache-current-key');
 
-    if (Cache::has('cache-current-key') && $transaction->uuid === $currentUuid ) {
-        $transaction->where('uuid', $currentUuid)
-            ->first();
-                
-        $data = [
-            'transactions' => $transaction,
-            'response' => 200,
-            'url' => $transaction->document->url
-        ];
-        return response()->json($data);
-    }
+        if (Cache::has('cache-current-key') && $transaction?->uuid === $currentUuid ) {
+            dd('s');
+            $transaction->where('uuid', $currentUuid)
+                ->first();
+                    
+            $data = [
+                'transactions' => $transaction,
+                'response' => 200,
+                'url' => $transaction->document->url
+            ];
+            return response()->json($data);
+        }
        
     return response()->json(
         [
@@ -56,6 +57,10 @@ class KioskController extends Controller
 
     public function cancelTransaction(Request $request) {
 
-        return $request->all();
+        if(Cache::has('cache-current-key')){
+            Transaction::where('uuid',  Cache::get('cache-current-key'))->delete();
+        }
+
     }
 }
+

@@ -206,49 +206,7 @@
             // Close the modal after cancellation
             var myModal = bootstrap.Modal.getInstance(document.getElementById('cancelTransactionModal'));
             myModal.hide();
-
-          
         });
-
-        // // Handle the confirmation of cancellation
-        // document.getElementById('confirmCancelBtn').addEventListener('click', function(event) {
-        //     alert('est')
-        //     event.preventDefault(); // Prevent default button behavior
-        //     // Implement your cancellation logic here, such as displaying a confirmation message
-        //     console.log('Transaction cancelled.'); // Placeholder for actual cancellation logic
-
-        //     // Make a POST request to the API endpoint for cancelling the transaction
-        //     fetch('/kiosk/cancelled', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             // Add any other headers or authentication tokens as needed
-        //         },
-        //         body: JSON.stringify({
-        //             transactionId: '{{ $transaction->id ?? 'default_document_id' }}', // Include the transaction ID in the request body
-        //             cancellationReason: 'User cancelled the transaction' // Optional: Add a reason for cancellation
-        //         })
-        //     })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             console.log('Transaction cancellation request sent successfully.');
-        //             // Optionally, display a success message or perform any additional actions
-        //         } else {
-        //             console.error('Error sending cancellation request:', response.status);
-        //             // Handle error response from the API if needed
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.error('Error sending cancellation request:', error);
-        //         // Handle network or other errors if the request fails
-        //     });
-
-        // // Close the modal after cancellation
-        //    console.log('Button clicked.'); // Test message to check if the button click event is detected
-        //     var myModal = bootstrap.Modal.getInstance(document.getElementById('cancelTransactionModal'));
-        //     myModal.hide();
-        // });
-
     });
 
 
