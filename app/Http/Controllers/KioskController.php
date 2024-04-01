@@ -35,7 +35,6 @@ class KioskController extends Controller
         $currentUuid =  Cache::get('cache-current-key');
 
         if (Cache::has('cache-current-key') && $transaction?->uuid === $currentUuid ) {
-            dd('s');
             $transaction->where('uuid', $currentUuid)
                 ->first();
                     

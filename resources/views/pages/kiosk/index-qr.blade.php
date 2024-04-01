@@ -132,7 +132,12 @@
 
                         // Update the iframe source only if the transaction ID changes
                         if (documentId != '{{ $transaction->document_id ?? 'default_document_id' }}') {
+                            console.log('test',data);
                             const iframeElement = document.querySelector('#pdf-iframe');
+                                if(!iframeElement){
+                                    location.reload();
+                                    return;
+                                }
                             iframeElement.src = '{{ route('pdf.viewer', ['id' => 'TRANSACTION_DOCUMENT_ID']) }}'.replace('TRANSACTION_DOCUMENT_ID', data.transactions.document_id);
                             location.reload();
                             return;
