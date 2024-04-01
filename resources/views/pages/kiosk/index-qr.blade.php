@@ -25,7 +25,7 @@
         display: none;
     }
     /* Initially hide the main content */
-    .main-content {
+    #main-content {
         display: none;
     }
     
