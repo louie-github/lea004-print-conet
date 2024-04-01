@@ -266,7 +266,7 @@
         const paymentForm = document.getElementById('paymentForm');
 
         payNowBtn.addEventListener('click', function () {
-            alert('Payment Submit')
+            alert('Payment TEST')
 ;            // Perform any necessary validations before submitting the form
             // For example, you can check if all required fields are filled out
 
