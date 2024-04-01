@@ -1,6 +1,35 @@
 @extends('layouts.app-kiosk')
+<style>
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #333;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        display: none;
+    }
+</style>
 
 @section('content')
+<div class="loading-container" id="loadingContainer">
+    <div class="loading-spinner"></div>
+</div>
     <main class="main-content mt-0">
         <section id="payment_details_kiosk">
             <div class="page-header min-vh-100">
@@ -96,7 +125,6 @@
                         </div>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal" >Close</button>
                             <button type="submit" class="btn btn-primary" id="confirmCancelBtn">Yes, Cancel</button>
                         </div>
                     </div>
@@ -212,6 +240,16 @@
             var myModal = bootstrap.Modal.getInstance(document.getElementById('cancelTransactionModal'));
             myModal.hide();
         });
+
+        //simulate loading
+        const loadingContainer = document.getElementById('loadingContainer');
+        const content = document.getElementById('content');
+
+        // Simulate loading time
+        setTimeout(function () {
+            loadingContainer.style.display = 'none';
+            content.style.display = 'block';
+        }, 1000); // Adjust the time as needed (in milliseconds)
     });
 
 

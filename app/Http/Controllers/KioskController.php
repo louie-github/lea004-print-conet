@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Psy\Readline\Transient;
 
 class KioskController extends Controller
 {
@@ -57,7 +58,7 @@ class KioskController extends Controller
     public function cancelTransaction(Request $request) {
 
         if(Cache::has('cache-current-key')){
-            Transaction::where('uuid',  Cache::get('cache-current-key'))->delete();
+            Transaction::where('uuid',  Cache::get('cache-current-key'))->update(['status' =>Transaction::TS_CANCELLED]);
         }
 
     }
