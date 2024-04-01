@@ -43,7 +43,8 @@ class KioskController extends Controller
             $data = [
                 'transactions' => $transaction,
                 'response' => 200,
-                'url' => $transaction->document->url
+                'url' => $transaction->document->url,
+                'page_range' => $transaction->document->page_range
             ];
             return response()->json($data);
         }

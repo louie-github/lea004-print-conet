@@ -47,13 +47,13 @@
                                     <p class="mb-0">Please verify the document before proceeding with the <b>payment.</b></p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form">
+                                    <form role="form" id="paymentForm">
                                         <div id="transactionDetails" class="mb-3"></div>
                                         <div id="transDescription" class="mb-3"></div>
                                         <div id="noCopies" class="mb-3"></div>
                                         <div id="totalAmount" class="mb-3"></div>
                                         <div class="text-center">
-                                            <button type="button" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Pay now</button>
+                                            <button type="button"  id="payNowBtn" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Pay now</button>
                                         </div>
                                     </form>
                                 </div>
@@ -203,6 +203,7 @@
             myModal.show();
         });
 
+        //cancel process modal
         document.getElementById('confirmCancelBtn').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent default button behavior
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -258,9 +259,21 @@
             loadingContainer.style.display = 'none'; // Hide loading animation
             mainContent.style.display = 'block'; // Show main content
         }, 2000); // Adjust the time as needed (in milliseconds)
+
+
+        //submit payment
+        const payNowBtn = document.getElementById('payNowBtn');
+        const paymentForm = document.getElementById('paymentForm');
+
+        payNowBtn.addEventListener('click', function () {
+            alert('Payment Submit')
+;            // Perform any necessary validations before submitting the form
+            // For example, you can check if all required fields are filled out
+
+            // If validations pass, submit the form
+            paymentForm.submit();
+        });
     });
-
-
 
     </script>
 @endsection
