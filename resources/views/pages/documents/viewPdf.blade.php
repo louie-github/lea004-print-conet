@@ -18,15 +18,15 @@
                                 @include('components.alert')
                             </div>
 
-                            @if (!auth()->user()->is_admin)
-                            <div class="col text-end">
-                                <a class="nav-link mb-0 px-0 py-1 px-2"
-                                    data-bs-toggle="modal" data-bs-target="#settingsModal"
-                                    role="tab" aria-selected="false">
-                                    <i class="ni ni-settings-gear-65"></i>
-                                    <span class="ms-2">Settings</span>
-                                </a>
-                            </div>
+                            @if (!auth()->user()->is_admin && cache()->get('cache-current-key'))
+                                <div class="col text-end">
+                                    <a class="nav-link mb-0 px-0 py-1 px-2"
+                                        data-bs-toggle="modal" data-bs-target="#settingsModal"
+                                        role="tab" aria-selected="false">
+                                        <i class="ni ni-settings-gear-65"></i>
+                                        <span class="ms-2">Settings</span>
+                                    </a>
+                                </div>
                             @endif
                                 
                         </div>
