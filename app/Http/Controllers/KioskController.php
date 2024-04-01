@@ -56,6 +56,6 @@ class KioskController extends Controller
 
     public function cancelTransaction(Request $request) {
 
-        dd($request);
+        return $request->all();
     }
 }
