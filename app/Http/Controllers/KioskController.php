@@ -50,6 +50,10 @@ class KioskController extends Controller
         return back()->with('succes', 'Found transaction!');
     }
 
+    public function printPreview() {
+        return view('pages.kiosk.print-preview');
+    }
+
     public function loadContent(Request $request)
     {
         // Perform any necessary operations to fetch data
