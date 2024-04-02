@@ -40,9 +40,6 @@ class TransactionController extends Controller
             $printPages = explode('-', $request->page_range);
             $numPages =  abs(($printPages[0] -  $printPages[1])) + 1;
 
-            // TODO: Schedule task to set transaction as EXPIRED after
-            // 15 minutes.
-
             // new transaction
             $transaction = Transaction::create([
                 'status' => Transaction::TS_PENDING,
@@ -57,6 +54,8 @@ class TransactionController extends Controller
             return compact('transaction');
         });
 
+        // TODO: Schedule task to set transaction as EXPIRED after
+        // 15 minutes.
         $transaction = $dbTransaction['transaction'];
 
         // Generate a unique 6-digit PIN.
@@ -64,7 +63,7 @@ class TransactionController extends Controller
         while (Cache::has("PIN-$pin")) {
             $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         }
-        Cache::put("PIN-$pin", $transaction->id);
+        Cache::put("PIN-$pin", $transaction->id, 15 * 60);
 
         return back()->with('succes', "PIN is: $pin");
     }
