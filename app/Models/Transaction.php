@@ -22,8 +22,6 @@ class Transaction extends Model
         'user_id',
         'no_copies',
         'is_colored',
-        'uuid',
-        'pin',
     ];
     
     //transaction status

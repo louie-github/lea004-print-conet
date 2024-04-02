@@ -120,7 +120,6 @@ class DocumentController extends Controller
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies ,
                 'is_colored' => $request->color === 'colored'? 1 : 0,
                 'no_copies' => $request->no_copies,
-                'pin' =>  $pin,
             ]);
         });
 
