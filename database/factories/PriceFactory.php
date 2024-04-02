@@ -17,8 +17,8 @@ class PriceFactory extends Factory
     public function definition(): array
     {
         return [
-            'black_and_white_price' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 10, $max = 100),
-            'colored_price' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 200),
+            'black_and_white_price' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 2),
+            'colored_price' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 2, $max = 3),
         ];
     }
 }
