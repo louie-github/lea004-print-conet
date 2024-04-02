@@ -45,10 +45,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{route('document.update',['document' =>$document->id])}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('transaction.store') }}" enctype="multipart/form-data">
                         @csrf
-
-                        @method('put')
+                        <input name="document_id" type="hidden" value="{{ $document->id }}">
                         <div class="mb-2">
                             <label for="text" class="form-label">Document Name</label>
                             <input type="text" class="form-control" id="name" name="name" value={{$document->name}} disabled>

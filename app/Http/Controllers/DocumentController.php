@@ -21,11 +21,6 @@ class DocumentController extends Controller
     
         if (!file_exists($path)  ) {
             abort(404, 'File not found');
-
-            //for the kiosk pdf viewer
-            if(!Cache::has('cache-current-key') ){
-                abort(404, 'Not allowed');
-            }
         }
     
         $file = file_get_contents($path);
@@ -82,48 +77,8 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-        DB::transaction(function () use ($document, $request) {
-            //update document data
-            $document->update([
-                'page_range' => $request->page_range_slider,
-            ]);
+     
 
-            //string to array values
-            $numPages = explode('-', $request->page_range);
-            
-            $printPages =  abs(($numPages[0] -  $numPages[1]));
-
-            //previous transaction
-            $transactionPrevious = Transaction::where('status', Transaction::TS_PENDING)
-                ->latest()
-                ->first();
-
-            if($transactionPrevious) {
-                Transaction::where('user_id', auth()->user()->id)
-                    ->update(['status' => Transaction::TS_CANCELLED]);
-            }
-            //generate pin
-            $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-            // Check if the PIN exists in the cached PINs and if it has not expired.
-            $pin = $this->pinValidation($pin);
-            $pinCacheKey = 'pin-' . $pin ;
-            //store pin
-            cache()->put($pinCacheKey, $pin, $seconds = 900);
-
-            // new transaction
-            Transaction::create([
-                'status' => Cache ::has('cache-current-key') ? Transaction::TS_IN_PROCESS : Transaction::TS_PENDING,
-                'user_id' => auth()->user()->id,
-                'document_id' => $document->id,
-                'total_pages' => $printPages + 1,
-                'amount_to_be_paid' => $request->total_amount  * $request->no_copies ,
-                'is_colored' => $request->color === 'colored'? 1 : 0,
-                'no_copies' => $request->no_copies,
-            ]);
-        });
-
-        return back()->with('succes', 'Document Settings Saved.');
     }
 
     /**
@@ -134,28 +89,4 @@ class DocumentController extends Controller
         //
     }
 
-    private function pinValidation($pin){
-        $notExpiredCacheItems = DB::table('cache')
-                ->select('key', 'value')
-				->where('key', 'like', '%laravel_cache_pin%')
-                ->where('expiration', '>', Carbon::now())
-                ->get();
-
-            // Create an array to store existing PINs
-	        $existingPins = [];
-            foreach ($notExpiredCacheItems as $cacheItem) {
-                $originalKey = $cacheItem->key;
-                $modifiedKey = str_replace('laravel_cache_pin-', '', $originalKey);
-            
-                $existingPins[] = $modifiedKey;
-        }
-
-        // Check if the new PIN already exists in the existingPins array
-        while (in_array($pin, $existingPins)) {
-            // Regenerate the PIN if it already exists\
-            echo 'exist';
-            $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        }
-        return $pin;
-    }
 }
