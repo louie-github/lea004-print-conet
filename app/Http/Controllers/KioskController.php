@@ -32,6 +32,11 @@ class KioskController extends Controller
         return redirect()->route('page', ['page' => 'documents']);
     }
 
+    public function pinInput()
+    {
+        return view('pages.kiosk.pin-input');
+    }
+
     public function loadContent(Request $request)
     {
         // Perform any necessary operations to fetch data

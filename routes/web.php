@@ -62,6 +62,7 @@ Route::get('/welcome', function () {
 });
 Route::redirect('/kiosk', '/kiosk/qr');
 Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->name('index.kiosk');
+Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->name('content.kiosk');
 Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('content.kiosk');
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kioask.cancelled');
