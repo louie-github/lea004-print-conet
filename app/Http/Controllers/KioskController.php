@@ -37,6 +37,19 @@ class KioskController extends Controller
         return view('pages.kiosk.pin-input');
     }
 
+    public function pinTransaction(Request $request) {
+        $pin = $request->pin;
+
+        // Protect against race conditions; try instead of check
+        $transactionID = Cache::get("PIN-$pin");
+
+        if (is_null($transactionID)) {
+            return back()->with('error', "Invalid PIN (PIN-$pin)");
+        }
+
+        return back()->with('succes', 'Found transaction!');
+    }
+
     public function loadContent(Request $request)
     {
         // Perform any necessary operations to fetch data

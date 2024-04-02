@@ -61,9 +61,6 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 Route::redirect('/kiosk', '/kiosk/qr');
-Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->name('index.kiosk');
-Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->name('content.kiosk');
-Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('content.kiosk');
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kioask.cancelled');
 
@@ -91,6 +88,10 @@ Route::group(['middleware' => 'auth'], function () {
 	//documents
 	Route::resource('document',DocumentController::class);
 	Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
+	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->name('index.kiosk');
+	Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->name('content.kiosk');
+	Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('content.kiosk');
+	Route::post('/kiosk/loadTransaction',[KioskController::class,'pinTransaction'])->name('kiosk.pinTransaction');
 
 	Route::resource('transaction', TransactionController::class);
 
