@@ -6,6 +6,7 @@ use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -101,7 +102,14 @@ class DocumentController extends Controller
                 Transaction::where('user_id', auth()->user()->id)
                     ->update(['status' => Transaction::TS_CANCELLED]);
             }
+            //generate pin
+            $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
+            // Check if the PIN exists in the cached PINs and if it has not expired.
+            $pin = $this->pinValidation($pin);
+            $pinCacheKey = 'pin-' . $pin ;
+            //store pin
+            cache()->put($pinCacheKey, $pin, $seconds = 900);
 
             // new transaction
             Transaction::create([
@@ -112,7 +120,7 @@ class DocumentController extends Controller
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies ,
                 'is_colored' => $request->color === 'colored'? 1 : 0,
                 'no_copies' => $request->no_copies,
-                'uuid' =>  Cache::get('cache-current-key'),
+                'pin' =>  $pin,
             ]);
         });
 
@@ -125,5 +133,30 @@ class DocumentController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function pinValidation($pin){
+        $notExpiredCacheItems = DB::table('cache')
+                ->select('key', 'value')
+				->where('key', 'like', '%laravel_cache_pin%')
+                ->where('expiration', '>', Carbon::now())
+                ->get();
+
+            // Create an array to store existing PINs
+	        $existingPins = [];
+            foreach ($notExpiredCacheItems as $cacheItem) {
+                $originalKey = $cacheItem->key;
+                $modifiedKey = str_replace('laravel_cache_pin-', '', $originalKey);
+            
+                $existingPins[] = $modifiedKey;
+        }
+
+        // Check if the new PIN already exists in the existingPins array
+        while (in_array($pin, $existingPins)) {
+            // Regenerate the PIN if it already exists\
+            echo 'exist';
+            $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        }
+        return $pin;
     }
 }

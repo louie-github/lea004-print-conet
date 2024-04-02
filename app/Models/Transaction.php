@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transaction extends Model
 {
@@ -22,6 +23,7 @@ class Transaction extends Model
         'no_copies',
         'is_colored',
         'uuid',
+        'pin',
     ];
     
     //transaction status
@@ -30,7 +32,6 @@ class Transaction extends Model
     const TS_FAILED = 'Failed';
     const TS_IN_PROCESS= 'In Process';
     const TS_CANCELLED= 'Cancelled';
-    
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -41,6 +42,10 @@ class Transaction extends Model
 
     public function document(): BelongsTo{
         return $this->belongsTo(Document::class);
+    }
+
+    public function payments(): HasMany {
+        return $this->hasMany(Payment::class);
     }
 
     protected function createdAt(): Attribute

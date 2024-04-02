@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->nullable();
+            $table->integer('uuid')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('document_id');
             $table->integer('total_pages')->default(1);
@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status')->default('Pending');
             $table->integer('no_copies')->default(1);
             $table->boolean('is_colored')->default(0);
+            $table->integer('pin')->length(6);
             $table->timestamps();
         });
     }

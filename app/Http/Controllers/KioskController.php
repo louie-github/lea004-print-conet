@@ -18,11 +18,13 @@ class KioskController extends Controller
 
     public function kioskCachedRedirect() {
 
-        $cacheKey = 'cache-current-key';
+        $cachePinKey = 'pin-' . auth()->user()->id;
 
-        if (!Cache ::has( $cacheKey)) {
-            //TTL == 5hours
-            Cache::store('file')->put($cacheKey,  Str::random(32), 18000);
+        if ( !Cache ::has( $cachePinKey)) {
+            //TTL == 15mins
+            Cache::put($cachePinKey , Str::randomNumber(6), $seconds = 900);
+
+            // Cache::store('file')->put($cacheKey,  Str::random(32), 900);
         }
       
         return redirect()->route('page', ['page' => 'documents']);
@@ -34,7 +36,7 @@ class KioskController extends Controller
         ->where('status', Transaction::TS_IN_PROCESS)
         ->first();
         //current cache id
-        $currentUuid =  Cache::get('cache-current-key');
+    $currentUuid =  Cache::get('cache-current-key');
 
         if (Cache::has('cache-current-key') && $transaction?->uuid === $currentUuid ) {
             $transaction->where('uuid', $currentUuid)

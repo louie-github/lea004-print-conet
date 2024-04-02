@@ -51,6 +51,10 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PriceControlller;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -60,6 +64,54 @@ Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('conte
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kioask.cancelled');
 
+Route::get('/cache-store', function() { 
+
+	Cache::put('xxx', 'xx', $seconds = 3);
+// Check if the PIN exists in the cache
+
+	// $pin = str_pad(random_int(0, 999
+	
+	$pin = 136423;
+	// $pinCacheKey = 'pin-' . $pin ;
+
+	// cache()->put($pinCacheKey, $pin),
+	
+	// cache()->put('active_pin','activ
+	echo 'entered pin'. $pin;
+
+
+	// Check if the PIN exists in the cached PINs and if it has not expired.
+	$notExpiredCacheItems = DB::table('cache')
+                ->select('key', 'value')
+				->where('key', 'like', '%laravel_cache_pin%')
+                ->where('expiration', '>', Carbon::now())
+                ->get();
+
+
+	 // Create an array to store existing PINs
+	$existingPins = [];
+	foreach ($notExpiredCacheItems as $cacheItem) {
+		    $originalKey = $cacheItem->key;
+    		$modifiedKey = str_replace('laravel_cache_pin-', '', $originalKey);
+		
+			$existingPins[] = $modifiedKey;
+
+		echo "Modified Key: {$modifiedKey}, Value: {$cacheItem->value}<br>";
+	}
+
+
+	// Check if the new PIN already exists in the existingPins array
+    while (in_array($pin, $existingPins)) {
+        // Regenerate the PIN if it already exists\
+		echo 'exist';
+        $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+	echo $pin;
+
+
+	
+});
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
