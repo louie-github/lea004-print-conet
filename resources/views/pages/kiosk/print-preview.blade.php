@@ -37,9 +37,6 @@
                         </div>
                         <div
                             class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-                            @php
-                                $transaction = App\Models\Transaction::latest()->first();
-                            @endphp
 
                             @if ($transaction)
                                 <iframe id="pdf-iframe" class="mb-5"
@@ -76,25 +73,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let transactionId;
             let qrKioskElement = document.getElementById('qr_kiosk');
             let paymentDetailsKiosk = document.getElementById('payment_details_kiosk');
             let messageElement = document.getElementById('error-message');
 
             // Function to load dynamic content via AJAX
             function loadDynamicContent() {
-                fetch('{{ route('content.kiosk') }}')
+                fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
                     .then(response => response.json())
                     .then(data => {
                         if (data.response === 200) {
-                            const transDescription = data.transactions.total_pages + ' pages ' + (data
-                                .transactions.is_colored ? 'Colored' : 'B&W');
-                            const noCopies = 'Copies: ' + data.transactions.no_copies;
-                            const totalAmount = 'TOTAL: ₱' + data.transactions.amount_to_be_paid;
+                            const transDescription = data.transaction.total_pages + ' pages '
+                            const is_colored = data.transaction.is_colored ? 'Colored' : 'BW';
+                            const noCopies = 'Copies: ' + data.transaction.no_copies;
+                            const totalAmount = 'TOTAL: ₱' + data.transaction.amount_to_be_paid;
 
-                            transactionId = data.transactions.id;
-                            documentId = data.transactions.document_id
-                            qrKioskElement.style.display = 'none';
+                            transactionId = data.transaction.id;
+                            documentId = data.transaction.document_id
                             paymentDetailsKiosk.style.display = 'block'; // Show transaction details section
                             document.getElementById('transactionDetails').innerText = 'Transaction ID: ' +
                                 transactionId;
@@ -119,9 +114,7 @@
                             }
 
                         } else {
-                            qrKioskElement.style.display = 'block'; // Show QR section
-                            paymentDetailsKiosk.style.display = 'none'; // Hide transaction details section
-                            // messageElement.innerText = data.error;
+                            alert("No transaction found.");
                         }
                     })
                     .catch(error => console.error('Error:', error));

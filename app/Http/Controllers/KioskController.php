@@ -47,11 +47,13 @@ class KioskController extends Controller
             return back()->with('error', "Invalid PIN (PIN-$pin)");
         }
 
-        return back()->with('succes', 'Found transaction!');
+        $transaction = Transaction::where('id', $transactionID);
+
+        return redirect()->route("kiosk.printPreview", ['transaction' => $transaction]);
     }
 
-    public function printPreview() {
-        return view('pages.kiosk.print-preview');
+    public function printPreview(Request $request, Transaction $transaction) {
+        return view('pages.kiosk.print-preview', compact('transaction'));
     }
 
     public function loadContent(Request $request)

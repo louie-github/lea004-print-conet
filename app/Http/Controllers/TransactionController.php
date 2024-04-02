@@ -74,7 +74,24 @@ class TransactionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $transaction = Transaction::find($id);
+        if (is_null($transaction)) {
+            return response()->json(
+                [
+                    'error' => 'No Transaction Found.',
+                    'response' => 404
+                ],
+                404
+            );
+        }
+        else {
+            return response()->json(
+                [
+                    'response' => 200,
+                    'transaction' => $transaction,
+                ]
+            );
+        }
     }
 
     /**

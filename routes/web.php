@@ -94,7 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->name('index.kiosk');
 	Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->name('content.kiosk');
 	Route::post('/kiosk/loadTransaction',[KioskController::class,'pinTransaction'])->name('kiosk.pinTransaction');
-	Route::get('/kiosk/printPreview',[KioskController::class,'printPreview'])->name('kiosk.printPreview');
+	Route::get('/kiosk/printPreview/{transaction}',[KioskController::class,'printPreview'])->name('kiosk.printPreview');
 	Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('content.kiosk');
 
 	Route::resource('transaction', TransactionController::class);
