@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "printer"
+name = "print-conet-backend"
 version = "0.1.0"
-description = "Print CoNet printer backend CLI tool with REST API"
+description = "Print CoNet backend APIs"
 authors = ["Louie Torres <lbtowers@proton.me>"]
 readme = "README.md"
 packages = [{ include = "printer" }]
