@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from typing import Dict, Tuple
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -22,15 +21,10 @@ app = FastAPI()
 
 class PrintJob(BaseModel):
     filename: str
-    transaction_id: str
-    total_payment: int
     has_color: bool = Field(default=True)
     page_start: int = Field(default=0)
     page_end: int = Field(default=0)
     num_copies: int = Field(default=1)
-
-
-CURRENT_JOBS: Dict[str, Tuple[PrintJob, int]] = {}
 
 
 @app.get("/status/")
@@ -49,54 +43,8 @@ async def read_status():
         )
 
 
-def _check_payment_status(transaction_id: str):
-    # TODO: Implement real payment checking.
-    return {
-        "total_payment": CURRENT_JOBS[transaction_id][0].total_payment,
-        "amount_collected": CURRENT_JOBS[transaction_id][0].total_payment,
-        "amount_needed": 0,
-    }
-
-
-@app.get("/payment/{transaction_id}")
-async def check_payment_status(transaction_id: str):
-    return _check_payment_status(transaction_id)
-
-
 @app.post("/print/")
 async def queue_print_job(job: PrintJob):
-    job_id = job.transaction_id
-
-    if job_id not in CURRENT_JOBS:
-        CURRENT_JOBS[job_id] = (job, 0)
-        return {
-            "message": "Print job has been queued. Waiting for payment.",
-            "job": jsonable_encoder(job),
-        }
-
-    payment_status = _check_payment_status(job_id)
-
-    # If the transaction ID already exists, either delete the job when
-    # filename is blank or replace the job with the new parameters,
-    # keeping the current payment value the same.
-    if CURRENT_JOBS[job_id][0].filename != job.filename:
-        if job.filename == "":
-            del CURRENT_JOBS[job_id]
-        else:
-            CURRENT_JOBS[job_id] = (job, CURRENT_JOBS[job_id][1])
-            return {
-                "message": "New print job has replaced old print job. Waiting for payment.",
-                "job": jsonable_encoder(job),
-                "payment_status": jsonable_encoder(payment_status),
-            }
-
-    if payment_status["amount_needed"] >= 0:
-        return {
-            "message": "Print job is currently queued and awaiting complete payment.",
-            "job": jsonable_encoder(job),
-            "payment_status": jsonable_encoder(payment_status),
-        }
-
     try:
         print_file(
             app.state.printer_handle,
@@ -120,9 +68,8 @@ async def queue_print_job(job: PrintJob):
             },
         )
     else:
-        CURRENT_JOBS.pop(job_id)
         return {
-            "message": "Payment complete. Print job sent.",
+            "message": "Print job sent.",
             "job": jsonable_encoder(job),
         }
 
