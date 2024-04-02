@@ -148,7 +148,7 @@
                                 @empty
                                 <tr>
                                     <td class="text-center">
-                                        NO NEW USERS TODAY
+                                        No new users today.
                                     </td>
                                 </tr>
                                 @endforelse
