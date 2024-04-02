@@ -98,12 +98,46 @@
             </div>
         </div>
     </div>
+    <!-- PIN modal -->
+    <!-- Open PIN modal if needed -->
+    @if ($message = session()->has('pinDigits'))
+        <div class="modal fade" id="pinModal" aria-labelledby="pinModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pinModalLabel">PIN</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column">
+                        <h5 class="text-center">Your PIN is:</h5>
+                        <div class="mt-2 mb-4 d-flex flex-row justify-content-center">
+                            @foreach (session()->get('pinDigits') as $digit)
+                                <span class="h1 px-2 mx-1 border border-dark rounded">{{ $digit }}</span>
+                            @endforeach
+                        </div>
+                        <p class="w-80 align-self-center text-center">
+                            This PIN will expire in 15 minutes.
+                            Please proceed to the kiosk for payment.
+                        </p>
+                        <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                (new bootstrap.Modal('#pinModal')).show();
+            });
+        </script>
+    @endif
   <!-- jQuery -->
   <script src="{{asset('https://code.jquery.com/jquery-3.6.0.min.js')}}"></script>
 
   <!-- ion-rangeslider CSS and JS -->
   <link rel="stylesheet" href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css')}}">
   <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js')}}"></script>
+
 
 <script>
 $(document).ready(function(){
