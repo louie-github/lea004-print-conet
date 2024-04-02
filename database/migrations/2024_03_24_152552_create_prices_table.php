@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->decimal('black_and_white_price', total: 8, places: 2);
-            $table->decimal('colored_price', total: 8, places: 2);
+            $table->integer('black_and_white_price');
+            $table->integer('colored_price');
             $table->timestamps();
         });
     }
