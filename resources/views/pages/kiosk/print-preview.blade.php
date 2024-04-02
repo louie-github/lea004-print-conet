@@ -1,5 +1,40 @@
 @extends('layouts.app-kiosk')
+<style>
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #333;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        display: none;
+    }
+    /* Initially hide the main content */
+    #main-content {
+        display: none;
+    }
+    
+</style>
+
 @section('content')
+<div class="loading-container" id="loadingContainer">
+    <div class="loading-spinner"></div>
+</div>
     <main class="main-content mt-0" id="mainContent">
         <section id="payment_details_kiosk">
             <div class="page-header min-vh-100">
@@ -73,7 +108,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let qrKioskElement = document.getElementById('qr_kiosk');
             let paymentDetailsKiosk = document.getElementById('payment_details_kiosk');
             let messageElement = document.getElementById('error-message');
 
@@ -202,7 +236,7 @@
             const paymentForm = document.getElementById('paymentForm');
 
             payNowBtn.addEventListener('click', function() {
-                alert('Payment TEST'); // Perform any necessary validations before submitting the form
+                console.log('Payment TEST'); // Perform any necessary validations before submitting the form
                 // For example, you can check if all required fields are filled out
 
                 // If validations pass, submit the form
