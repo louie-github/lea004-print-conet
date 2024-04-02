@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "printer" }, { include = "coinslot" }]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.10"
 pywin32 = "^306"
 fastapi = "^0.109.2"
 uvicorn = { extras = ["standard"], version = "^0.27.1" }
@@ -18,6 +18,9 @@ requests = "^2.31.0"
 [tool.poetry.scripts]
 cli = 'printer.cli:main'
 coinslot = 'coinslot:main'
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.23.0"
 
 [build-system]
 requires = ["poetry-core"]
