@@ -14,16 +14,17 @@
                                     <span class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span>
                                 </span>
                             </div>
-                            <div id="alert">
-                                @include('components.alert')
-                            </div>
 
                             <div class="col text-end">
-                                <a class="nav-link mb-0 px-0 py-1 px-2" data-bs-toggle="modal"
+                                <button class="btn btn-primary mb-0 px-0 py-1 px-2" data-bs-toggle="modal"
                                     data-bs-target="#settingsModal" role="tab" aria-selected="false">
-                                    <i class="ni ni-settings-gear-65"></i>
-                                    <span class="ms-2">Settings</span>
-                                </a>
+                                    <i class="fa fa-print"></i>
+                                    <span class="ms-2">Print</span>
+                                </button>
+                            </div>
+
+                            <div id="alert">
+                                @include('components.alert')
                             </div>
                         </div>
 
