@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import queue
+import threading
+
 import requests
 import serial
 import serial.tools.list_ports
 
 MARKER = "+"
 PAYMENT_ROUTE = "http://localhost:8000/payment"
+
+CALL_QUEUE = queue.Queue()
 
 
 def find_arduino_port():
@@ -17,9 +22,12 @@ def find_arduino_port():
         return False
 
 
-def call_route(route=PAYMENT_ROUTE):
-    print("Test!")
-    # requests.get(route)
+def route_caller():
+    while True:
+        item = CALL_QUEUE.get()
+        print(f"Received item: {item}")
+        # requests.get(route)
+        CALL_QUEUE.task_done()
 
 
 def main():
@@ -29,11 +37,19 @@ def main():
 
     print(f"Connected to Arduino at port: {port}")
 
+    value = 0
+    route_caller_thread = threading.Thread(target=route_caller, daemon=True)
+    route_caller_thread.start()
+
     with serial.Serial(port, baudrate=9600) as ser:
-        while True:
-            line = ser.readline().decode("utf-8").strip()
-            if line == MARKER:
-                print("Pulse detected! Calling route.")
-                call_route()
-            else:
-                print(f"Line does not match marker: {line}")
+        try:
+            while True:
+                line = ser.readline().decode("utf-8").strip()
+                if line == MARKER:
+                    value += 1
+                    CALL_QUEUE.put(value)
+                else:
+                    print(f"Line does not match marker: {line}")
+        except KeyboardInterrupt:
+            print("Exiting; please wait for all calls to finish...")
+            CALL_QUEUE.join()
