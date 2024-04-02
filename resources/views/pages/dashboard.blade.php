@@ -146,7 +146,11 @@
                                     
                                 </tr>
                                 @empty
-                                    NO NEW USERS TODAY
+                                <tr>
+                                    <td class="text-center">
+                                        NO NEW USERS TODAY
+                                    </td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
