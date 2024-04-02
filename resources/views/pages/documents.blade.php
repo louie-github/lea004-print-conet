@@ -11,14 +11,12 @@
                             <div class="col">
                                 <h6 class="mb-0">Document Information</h6>
                             </div>
-                            @if (!auth()->user()->is_admin)
-                                <div class="col text-end">
-                                    <a class="btn bg-gradient-dark mb-0" data-bs-toggle="modal" data-bs-target="#addFileModal">
-                                        <i class="fas fa-plus"></i>
-                                        &nbsp;&nbsp;Add File
-                                    </a>
-                                </div>
-                            @endif
+                            <div class="col text-end">
+                                <a class="btn bg-gradient-dark mb-0" data-bs-toggle="modal" data-bs-target="#addFileModal">
+                                    <i class="fas fa-plus"></i>
+                                    &nbsp;&nbsp;Add File
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div id="alert">
