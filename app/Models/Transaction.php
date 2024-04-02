@@ -18,6 +18,7 @@ class Transaction extends Model
         'document_id',
         'total_pages', //total print pages
         'amount_to_be_paid',
+        'amount_collected',
         'status',
         'user_id',
         'no_copies',

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('document_id');
             $table->integer('total_pages')->default(1);
             $table->integer('amount_to_be_paid')->default(0);
+            $table->integer('amount_collected')->default(0);
             $table->string('status')->default('Pending');
             $table->integer('no_copies')->default(1);
             $table->boolean('is_colored')->default(0);
