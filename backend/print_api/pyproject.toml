@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "printer"
+version = "0.1.0"
+description = "Print CoNet printer backend CLI tool with REST API"
+authors = ["Louie Torres <lbtowers@proton.me>"]
+readme = "README.md"
+packages = [{ include = "printer" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pywin32 = "^306"
+fastapi = "^0.109.2"
+uvicorn = { extras = ["standard"], version = "^0.27.1" }
+pypdf = "^4.1.0"
+
+[tool.poetry.scripts]
+cli = 'printer.cli:main'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
