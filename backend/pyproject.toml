@@ -17,7 +17,7 @@ requests = "^2.31.0"
 
 [tool.poetry.scripts]
 cli = 'printer.cli:main'
-coinslot = 'coinslot:main'
+coinslot = 'coinslot.main:main'
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.23.0"
