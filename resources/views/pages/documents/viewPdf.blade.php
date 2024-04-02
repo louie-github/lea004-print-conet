@@ -16,7 +16,7 @@
                             </div>
 
                             <div class="col text-end">
-                                <button class="btn btn-primary mb-0 px-0 py-1 px-2" data-bs-toggle="modal"
+                                <button class="btn btn-primary btn-lg mb-0 px-0 py-1 px-2" data-bs-toggle="modal"
                                     data-bs-target="#settingsModal" role="tab" aria-selected="false">
                                     <i class="fa fa-print"></i>
                                     <span class="ms-2">Print</span>
@@ -110,16 +110,17 @@
                     </div>
                     <div class="modal-body d-flex flex-column">
                         <h5 class="text-center">Your PIN is:</h5>
-                        <div class="mt-2 mb-4 d-flex flex-row justify-content-center">
+                        <div class="mt-2 mb-3 d-flex flex-row justify-content-center">
                             @foreach (session()->get('pinDigits') as $digit)
                                 <span class="h1 px-2 mx-1 border border-dark rounded">{{ $digit }}</span>
                             @endforeach
                         </div>
-                        <p class="w-80 align-self-center text-center">
+                        <p class="w-80 mx-1 align-self-center text-center">
                             This PIN will expire in 15 minutes.
                             Please proceed to the kiosk for payment.
                         </p>
-                        <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn bg-gradient-dark w-25 align-self-center"
+                        data-bs-dismiss="modal">Close</button>
                         </form>
                     </div>
                 </div>
