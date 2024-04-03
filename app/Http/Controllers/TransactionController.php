@@ -42,6 +42,7 @@ class TransactionController extends Controller
                 'document_id' => $request->document_id,
                 'total_pages' => $numPages,
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies,
+                'amount_collected' => 0,
                 'is_colored' => $request->color === 'colored' ? 1 : 0,
                 'no_copies' => $request->no_copies,
             ]);

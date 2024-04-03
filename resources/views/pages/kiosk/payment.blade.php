@@ -43,24 +43,31 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                             <div class="card card-plain">
                                 <div class="card-header pb-0 text-start">
-                                    <h4 class="font-weight-bolder">Print Details</h4>
-                                    <p class="mb-0">Please verify the document before proceeding with the <b>payment.</b>
+                                    <h4 class="font-weight-bolder">Payment details</h4>
+                                    <p class="mb-0">
+                                        Please insert the coins into the coin slot.
+                                        Note that this kiosk <b>does not output change</b>.
+                                        Any excess payments will be ignored.
                                     </p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form" id="paymentForm"
-                                          action='{{ route("kiosk.payment", ["transaction" => "$transaction->id"]) }}''>
-                                        <div id="transactionDetails" class="mb-3"></div>
-                                        <div id="transDescription" class="mb-3"></div>
-                                        <div id="noCopies" class="mb-3"></div>
+                                    <form role="form" id="paymentForm" action="">
+                                        <div id="transactionDetails" class="mb-1"></div>
+                                        <div id="transDescription" class="mb-1"></div>
+                                        <div id="noCopies" class="mb-4"></div>
                                         <div class="mb-3">
-                                            <h5 class="text-center">TOTAL AMOUNT:</h5>
-                                            <h3 class="text-center" id="totalAmount"></h3>
+                                            <h5 class="text-center">AMOUNT TO PAY:</h5>
+                                            <h3 class="text-center" id="amountToPay"></h3>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h5 class="text-center">TOTAL COLLECTED:</h5>
+                                            <h3 class="text-center" id="amountCollected"></h3>
                                         </div>
                                         <div class="text-center">
-                                            <button type="button" id="payNowBtn"
-                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0 h5">
-                                                Pay now
+                                            <button type="button" id="printBtn"
+                                                class="btn btn-lg btn-default btn-lg w-100 mt-4 mb-0 h5"
+                                                disabled>
+                                                Print
                                             </button>
                                         </div>
                                     </form>
@@ -126,7 +133,8 @@
                             const transDescription = data.transaction.total_pages + ' pages '
                             const is_colored = data.transaction.is_colored ? 'Colored' : 'BW';
                             const noCopies = 'Copies: ' + data.transaction.no_copies;
-                            const totalAmount = '₱' + data.transaction.amount_to_be_paid + ".00";
+                            const amountToPay = '₱' + data.transaction.amount_to_be_paid + ".00";
+                            const amountCollected = '₱' + data.transaction.amount_collected + ".00";
 
                             transactionId = data.transaction.id;
                             documentId = data.transaction.document_id
@@ -136,7 +144,8 @@
                             document.getElementById('transDescription').innerText = 'Description: ' +
                                 transDescription;
                             document.getElementById('noCopies').innerText = noCopies;
-                            document.getElementById('totalAmount').innerText = totalAmount;
+                            document.getElementById('amountToPay').innerText = amountToPay;
+                            document.getElementById('amountCollected').innerText = amountCollected;
 
                             // Update the iframe source only if the transaction ID changes
                             if (documentId != '{{ $transaction->document_id ?? 'default_document_id' }}') {
@@ -237,8 +246,8 @@
             }, 2000); // Adjust the time as needed (in milliseconds)
 
 
-            //submit payment
-            const payNowBtn = document.getElementById('payNowBtn');
+            // submit print job
+            const printBtn = document.getElementById('printBtn');
             const paymentForm = document.getElementById('paymentForm');
 
             payNowBtn.addEventListener('click', function() {

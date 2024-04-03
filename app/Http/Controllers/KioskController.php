@@ -57,6 +57,10 @@ class KioskController extends Controller
         return view('pages.kiosk.print-preview', compact('transaction'));
     }
 
+    public function payment(Request $request, Transaction $transaction) {
+        return view('pages.kiosk.payment', compact('transaction'));
+    }
+
     public function loadContent()
     {
         $activePin =  Cache::get('ACTIVE-PIN');

@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/kiosk/pin', 'pinInput')->name('content.kiosk');
 		Route::post('/kiosk/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
 		Route::get('/kiosk/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
+		Route::get('/kiosk/payment/{transaction}', 'payment')->name('kiosk.payment');
 	});
 
 	// Non-visible pages
