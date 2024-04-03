@@ -159,9 +159,6 @@
             </div>
             <div class="col-lg-5">
                 <div class="card">
-                    <div id="alert">
-                        @include('components.alert')
-                    </div>
                     <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">Price List</h6>
                         <div class="col text-end">
@@ -181,7 +178,7 @@
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h6 class="mb-1 text-dark text-sm">Black and White</h6>
-                                        <span class="text-xs font-weight-bold">₱ {{$price->black_and_white_price}}</span>
+                                        <span class="text-xs font-weight-bold">₱ {{$price->black_and_white_price}}.00</span>
                                     </div>
                                 </div>
                               
@@ -193,12 +190,17 @@
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h6 class="mb-1 text-dark text-sm">Colored</h6>
-                                        <span class="text-xs font-weight-bold">₱ {{$price->colored_price}}</span>
+                                        <span class="text-xs font-weight-bold">₱ {{$price->colored_price}}.00</span>
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
+                    <div id="alert">
+                        @include('components.alert')
+                    </div>
+
                 </div>
             </div>
         </div>
