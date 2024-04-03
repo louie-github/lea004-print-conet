@@ -132,16 +132,13 @@
             document.addEventListener('DOMContentLoaded', function() {
                 (new bootstrap.Modal('#printStatusModal')).show();
             });
-        </script>
+    </script>
     @endif
 
 </main>
 
 <script>
-    var reachedTotal = false;
-
     setInterval(function() {
-        if (reachedTotal) return;
         fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
             .then(response => response.json())
             .then(data => {
@@ -156,7 +153,7 @@
                 }
             })
             .catch(error => console.error('Error:', error));
-    }, 1000);
+    }, 500);
 </script>
 
 <script>

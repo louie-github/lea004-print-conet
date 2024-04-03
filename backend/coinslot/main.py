@@ -9,7 +9,7 @@ import serial
 import serial.tools.list_ports
 
 MARKER = "+"
-PAYMENT_ROUTE = "http://localhost:8000/payment"
+PAYMENT_ROUTE = "http://localhost:8000/pulsePayment"
 
 CALL_QUEUE = queue.Queue()
 
@@ -26,7 +26,7 @@ def route_caller():
     while True:
         item = CALL_QUEUE.get()
         print(f"Received item: {item}")
-        # requests.get(route)
+        requests.get(PAYMENT_ROUTE)
         CALL_QUEUE.task_done()
 
 
