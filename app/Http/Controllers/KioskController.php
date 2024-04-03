@@ -74,13 +74,20 @@ class KioskController extends Controller
     }
 
     public function print(Transaction $transaction) {
-        return Http::post('http://127.0.0.1:48250/print', [
+        $response = Http::post('http://127.0.0.1:48250/print', [
             "filename" => $transaction->document->url,
             "has_color" => $transaction->is_colored,
             "page_start" => $transaction->page_start,
             "page_end" => $transaction->page_end,
             "num_copies" => $transaction->no_copies
         ]);
+
+        if ($response->status() == 200) {
+            return back()->with("succes", "Your print job has been sent.");
+        } else {
+            $error = $response->json()['message'];
+            return back()->with("error", "Unknown error: $error");
+        }
     }
 
     public function loadContent()

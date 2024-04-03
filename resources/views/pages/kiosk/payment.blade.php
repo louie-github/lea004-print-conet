@@ -93,6 +93,48 @@
             </div>
         </div>
     </div>
+
+    <!-- Print status modal -->
+    @if (session()->has('succes') || session()->has('error'))
+    <div class="modal fade" id="printStatusModal" tabindex="-1" aria-labelledby="printStatusModal"
+        data-dismiss="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printStatusModalLabel">Print Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @if ($message = session()->has('succes'))
+                <div class="modal-body">
+                    <h4 class="text-center">Success!</h4>
+                    <p class="text-center">Your print job has been sent.</p>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-primary" href="/kiosk/qr">Finish</a>
+                </div>
+                @elseif ($message = session()->has('error'))
+                <div class="modal-body">
+                    <h4 class="text-center">Error!</h4>
+                    <p class="text-center">
+                        The print job failed. Message from the server: {{ $message }}
+                    </p>
+                    <h4 class="text-center">Please try again.</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            href="/kiosk/qr">Close</a>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                (new bootstrap.Modal('#printStatusModal')).show();
+            });
+        </script>
+    @endif
+
 </main>
 
 <script>
