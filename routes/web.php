@@ -63,6 +63,7 @@ Route::get('/welcome', function () {
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
 Route::redirect('/', '/dashboard');
+Route::redirect('/home', '/dashboard');
 
 Route::middleware(['guest'])->group(function() {
 	Route::get('/register', [RegisterController::class, 'create'])->name('register');
