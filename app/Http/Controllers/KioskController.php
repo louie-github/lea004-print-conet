@@ -74,7 +74,7 @@ class KioskController extends Controller
     }
 
     public function print(Transaction $transaction) {
-        return Http::post('http://127.21.80.1:48250/print', [
+        return Http::post('http://127.0.0.1:48250/print', [
             "filename" => $transaction->document->url,
             "has_color" => $transaction->is_colored,
             "page_start" => $transaction->page_start,

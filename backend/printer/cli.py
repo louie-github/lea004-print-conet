@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -45,6 +46,14 @@ async def read_status():
 
 @app.post("/print/")
 async def queue_print_job(job: PrintJob):
+    job.filename = str(
+        (
+            Path(__file__).parent.parent.parent.resolve()
+            / "storage"
+            / "app"
+            / job.filename
+        ).resolve()
+    )
     try:
         print_file(
             app.state.printer_handle,
