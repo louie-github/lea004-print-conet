@@ -85,11 +85,9 @@ class KioskController extends Controller
 
     public function loadContent()
     {
-        $activePin =  Cache::get('ACTIVE-PIN');
+        $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
 
-        $transactionID = Cache::get("PIN-$activePin");
-
-        if(is_null($transactionID)) {
+        if(is_null($transaction)) {
             return response()->json(
                 [
                     'error' => 'No Transaction Found.',
@@ -99,16 +97,13 @@ class KioskController extends Controller
             );
         }
 
-        $transaction = Transaction::currentTransaction($transactionID)
-            ->first();
-
         return response()->json([
             'transactions' => $transaction,
             'response' => 200,
             'url' => $transaction->document->url,
             'page_range' => $transaction->document->page_range
         ]);
-       
+        
     }
 
     public function cancelTransaction(Request $request)
