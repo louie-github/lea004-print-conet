@@ -17,7 +17,7 @@
                             </div>
                             <div class="card-body">
                                 <form role="form" id="paymentForm"
-                                action=''>
+                                action="{{ route('kiosk.print', ['transaction' => $transaction]) }}">
                                     <div id="transactionDetails" class="mb-1">
                                         Transaction ID: {{ $transaction->id }}
                                     </div>

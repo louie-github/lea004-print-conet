@@ -90,14 +90,15 @@ Route::middleware(['auth'])->group(function () {
 	// TODO: Consolidate kiosk routes and handle all via KioskController
 	// See PageController for example
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
-	Route::controller(KioskController::class)->middleware(['admin'])->group(function () {
-		Route::redirect('/kiosk', '/kiosk/qr');
-		Route::get('/kiosk/qr', 'indexQR')->name('index.kiosk');
-		Route::post('/kiosk/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
-		Route::get('/kiosk/pin', 'pinInput')->name('content.kiosk');
-		Route::post('/kiosk/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
-		Route::get('/kiosk/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
-		Route::get('/kiosk/payment/{transaction}', 'payment')->name('kiosk.payment');
+	Route::prefix('kiosk')->controller(KioskController::class)
+		->middleware(['admin'])->group(function () {
+		Route::redirect('/', '/qr');
+		Route::get('/qr', 'indexQR')->name('index.kiosk');
+		Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
+		Route::get('/pin', 'pinInput')->name('content.kiosk');
+		Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
+		Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
+		Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
 	});
 
 	// Non-visible pages

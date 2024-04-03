@@ -49,7 +49,7 @@
                                 </div>
                                 <div class="card-body">
                                     <form role="form" id="paymentForm"
-                                          action='{{ route("kiosk.payment", ["transaction" => "$transaction->id"]) }}''>
+                                          action='{{ route("kiosk.payment", ["transaction" => $transaction]) }}''>
                                         <div id="transactionDetails" class="mb-3"></div>
                                         <div id="transDescription" class="mb-3"></div>
                                         <div id="noCopies" class="mb-3"></div>
