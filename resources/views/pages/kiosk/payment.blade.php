@@ -120,6 +120,28 @@
     </main>
 
     <script>
+        var reachedTotal = false;
+
+        setInterval(function() {
+            if (reachedTotal) return;
+            fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
+                .then(response => response.json())
+                .then(data => {
+                    const amountCollected = '₱' + data.transaction.amount_collected + ".00";
+                    document.getElementById('amountCollected').innerText = amountCollected;
+                    if (data.transaction.amount_collected >= data.transaction.amount_to_be_paid) {
+                        reachedTotal = true;
+                        const printBtn = document.getElementById("printBtn");
+                        printBtn.classList.remove("btn-default");
+                        printBtn.classList.add("btn-primary");
+                        printBtn.disabled = false;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }, 1000);
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             let paymentDetailsKiosk = document.getElementById('payment_details_kiosk');
             let messageElement = document.getElementById('error-message');
@@ -250,7 +272,7 @@
             const printBtn = document.getElementById('printBtn');
             const paymentForm = document.getElementById('paymentForm');
 
-            payNowBtn.addEventListener('click', function() {
+            printBtn.addEventListener('click', function() {
                 // TODO: Validate data
 
                 // If validations pass, submit the form
