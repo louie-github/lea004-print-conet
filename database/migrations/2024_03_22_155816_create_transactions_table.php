@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreignId('document_id');
             $table->integer('total_pages')->default(1);
+            $table->integer('page_start')->default(0);
+            $table->integer('page_end')->default(0);
             $table->integer('amount_to_be_paid')->default(0);
             $table->integer('amount_collected')->default(0);
             $table->string('status')->default('Pending');

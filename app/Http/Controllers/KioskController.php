@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Psy\Readline\Transient;
 
@@ -70,6 +71,16 @@ class KioskController extends Controller
         });
 
         return response()->json(['transaction_id' => $transaction->id], 200);
+    }
+
+    public function print(Transaction $transaction) {
+        return Http::post('http://127.21.80.1:48250/print', [
+            "filename" => $transaction->document->url,
+            "has_color" => $transaction->is_colored,
+            "page_start" => $transaction->page_start,
+            "page_end" => $transaction->page_end,
+            "num_copies" => $transaction->no_copies
+        ]);
     }
 
     public function loadContent()

@@ -33,13 +33,18 @@ class TransactionController extends Controller
     {
         $dbTransaction = DB::transaction(function () use ($document, $request) {
             $printPages = explode('-', $request->page_range);
-            $numPages =  abs(($printPages[0] -  $printPages[1])) + 1;
+            $pageStart = $printPages[0];
+            $pageEnd = $printPages[1];
+            $numPages =  abs(($pageEnd - $pageStart)) + 1;
 
             // new transaction
             $transaction = Transaction::create([
                 'status' => Transaction::TS_PENDING,
                 'user_id' => auth()->user()->id,
                 'document_id' => $request->document_id,
+                'total_pages' => $numPages,
+                'page_start' => $pageStart,
+                'page_end' => $pageEnd,
                 'total_pages' => $numPages,
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies,
                 'amount_collected' => 0,

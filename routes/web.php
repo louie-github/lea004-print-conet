@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
 		Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
 		Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
+		Route::get('/print/{transaction}', 'print')->name('kiosk.print');
 	});
 
 	// Non-visible pages

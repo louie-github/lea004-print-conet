@@ -17,6 +17,8 @@ class Transaction extends Model
     protected $fillable = [
         'document_id',
         'total_pages', //total print pages
+        'page_start',
+        'page_end',
         'amount_to_be_paid',
         'amount_collected',
         'status',
