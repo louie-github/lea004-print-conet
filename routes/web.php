@@ -62,20 +62,20 @@ Route::get('/welcome', function () {
 });
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
-Route::get('/', function () {
-	return redirect('/dashboard');
-})->middleware('auth');
-Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
-Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
-Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
-Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
-Route::get('/reset-password', [ResetPassword::class, 'show'])->middleware('guest')->name('reset-password');
-Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('guest')->name('reset.perform');
-Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
-Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
-Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::redirect('/', '/dashboard');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware(['guest'])->group(function() {
+	Route::get('/register', [RegisterController::class, 'create'])->name('register');
+	Route::post('/register', [RegisterController::class, 'store'])->name('register.perform');
+	Route::get('/login', [LoginController::class, 'show'])->name('login');
+	Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
+	Route::get('/reset-password', [ResetPassword::class, 'show'])->name('reset-password');
+	Route::post('/reset-password', [ResetPassword::class, 'send'])->name('reset.perform');
+	Route::get('/change-password', [ChangePassword::class, 'show'])->name('change-password');
+	Route::post('/change-password', [ChangePassword::class, 'update'])->name('change.perform');
+});
+
+Route::middleware(['auth'])->group(function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
@@ -85,22 +85,21 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+	Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+
 	// TODO: Consolidate kiosk routes and handle all via KioskController
 	// See PageController for example
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
-	Route::redirect('/kiosk', '/kiosk/qr');
-	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])
-		->middleware('admin')->name('index.kiosk');
-	Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])
-		->name('kiosk.cancelled');
-	Route::get('/kiosk/pin', [KioskController::class, 'pinInput'])
-		->middleware('admin')->name('content.kiosk');
-	Route::post('/kiosk/loadTransaction', [KioskController::class, 'pinTransaction'])
-		->middleware('admin')->name('kiosk.pinTransaction');
-	Route::get('/kiosk/printPreview/{transaction}', [KioskController::class, 'printPreview'])
-		->middleware('admin')->name('kiosk.printPreview');
+	Route::controller(KioskController::class)->middleware(['admin'])->group(function () {
+		Route::redirect('/kiosk', '/kiosk/qr');
+		Route::get('/kiosk/qr', 'indexQR')->name('index.kiosk');
+		Route::post('/kiosk/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
+		Route::get('/kiosk/pin', 'pinInput')->name('content.kiosk');
+		Route::post('/kiosk/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
+		Route::get('/kiosk/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
+	});
 
-	// documents
+	// Non-visible pages
 	Route::resource('document', DocumentController::class);
 
 	Route::resource('transaction', TransactionController::class);
