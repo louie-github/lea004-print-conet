@@ -30,13 +30,13 @@
                                     <div class="mb-3">
                                         <h5 class="text-center">AMOUNT TO PAY:</h5>
                                         <h3 class="text-center" id="amountToPay">
-                                            {{ $transaction->amount_to_be_paid }}.00
+                                            ₱{{ $transaction->amount_to_be_paid }}.00
                                         </h3>
                                     </div>
                                     <div class="mb-3">
                                         <h5 class="text-center">TOTAL COLLECTED:</h5>
                                         <h3 class="text-center" id="amountCollected">
-                                            {{ $transaction->amount_collected }}.00
+                                            ₱{{ $transaction->amount_collected }}.00
                                         </h3>
                                     </div>
                                     <div class="text-center">
