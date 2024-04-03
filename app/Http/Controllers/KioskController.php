@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Psy\Readline\Transient;
 
@@ -47,9 +48,8 @@ class KioskController extends Controller
             return back()->with('error', "Invalid PIN (PIN-$pin)");
         }
 
-        Cache::put("ACTIVE-PIN", $pin);
         $transaction = Transaction::find($transactionID);
-
+        Cache::put("ACTIVE-TRANSACTION-ID", $transactionID);
         return redirect()->route("kiosk.printPreview", ['transaction' => $transaction]);
     }
 
@@ -59,6 +59,17 @@ class KioskController extends Controller
 
     public function payment(Request $request, Transaction $transaction) {
         return view('pages.kiosk.payment', compact('transaction'));
+    }
+
+    public function pulsePayment() {
+        $transaction = DB::transaction(function() {
+            $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
+            $transaction->increment('amount_collected');
+            return $transaction;
+            
+        });
+
+        return response()->json(['transaction_id' => $transaction->id], 200);
     }
 
     public function loadContent()

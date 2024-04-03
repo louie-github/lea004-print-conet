@@ -52,14 +52,13 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PriceControlller;
 use App\Http\Controllers\TransactionController;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 Route::get('/welcome', function () {
 	return view('welcome');
 });
+Route::get('/pulsePayment', [KioskController::class, 'pulsePayment'])
+	->name('pulsePayment');
+
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
 Route::redirect('/', '/dashboard');
@@ -111,3 +110,6 @@ Route::middleware(['auth'])->group(function () {
 	// Make sure this is last so that routes do not get overridden.
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 });
+
+// NOTHING FOLLOWS. ALL ROUTES FROM HERE ONWARDS WILL BE OVERRIDEN by
+// the 'page' route.
