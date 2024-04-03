@@ -47,6 +47,7 @@ class KioskController extends Controller
             return back()->with('error', "Invalid PIN (PIN-$pin)");
         }
 
+        Cache::put("ACTIVE-PIN", $pin);
         $transaction = Transaction::find($transactionID);
 
         return redirect()->route("kiosk.printPreview", ['transaction' => $transaction]);
@@ -56,35 +57,32 @@ class KioskController extends Controller
         return view('pages.kiosk.print-preview', compact('transaction'));
     }
 
-    public function loadContent(Request $request)
+    public function loadContent()
     {
-        // Perform any necessary operations to fetch data
-        $transaction = Transaction::latest()
-            ->where('status', Transaction::TS_IN_PROCESS)
-            ->first();
-        //current cache id
-        $currentUuid =  Cache::get('cache-current-key');
+        $activePin =  Cache::get('ACTIVE-PIN');
 
-        if (Cache::has('cache-current-key') && $transaction?->uuid === $currentUuid) {
-            $transaction->where('uuid', $currentUuid)
-                ->first();
+        $transactionID = Cache::get("PIN-$activePin");
 
-            $data = [
-                'transactions' => $transaction,
-                'response' => 200,
-                'url' => $transaction->document->url,
-                'page_range' => $transaction->document->page_range
-            ];
-            return response()->json($data);
+        if(is_null($transactionID)) {
+            return response()->json(
+                [
+                    'error' => 'No Transaction Found.',
+                    'response' => 404
+                ],
+                404
+            );
         }
 
-        return response()->json(
-            [
-                'error' => 'No Transaction Found.',
-                'response' => 404
-            ],
-            404
-        );
+        $transaction = Transaction::currentTransaction($transactionID)
+            ->first();
+
+        return response()->json([
+            'transactions' => $transaction,
+            'response' => 200,
+            'url' => $transaction->document->url,
+            'page_range' => $transaction->document->page_range
+        ]);
+       
     }
 
     public function cancelTransaction(Request $request)

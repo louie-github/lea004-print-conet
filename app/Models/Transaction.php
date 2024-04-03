@@ -63,4 +63,12 @@ class Transaction extends Model
     {
         $query->whereDate('created_at', now()->toDateString());
     }
+
+  
+    public function scopeCurrentTransaction(Builder $query,   $transactionId): void
+    {
+        $query->where('id', $transactionId)
+            ->where('status', Transaction::TS_IN_PROCESS)
+            ->latest();
+    }
 }

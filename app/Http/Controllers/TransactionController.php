@@ -32,11 +32,6 @@ class TransactionController extends Controller
     public function store(Request $request, Document $document)
     {
         $dbTransaction = DB::transaction(function () use ($document, $request) {
-            // Do we really need this?
-            $document->update([
-                'page_range' => $request->page_range_slider,
-            ]);
-
             $printPages = explode('-', $request->page_range);
             $numPages =  abs(($printPages[0] -  $printPages[1])) + 1;
 
@@ -60,10 +55,11 @@ class TransactionController extends Controller
 
         // Generate a unique 6-digit PIN.
         $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
         $pinDigits = str_split($pin);
-        while (Cache::has("PIN-$pin")) {
-            $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        }
+            while (Cache::has("PIN-$pin")) {
+                $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            }
         Cache::put("PIN-$pin", $transaction->id, 15 * 60);
 
         return back()->with('pinDigits', $pinDigits);

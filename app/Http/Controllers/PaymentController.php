@@ -13,12 +13,11 @@ class PaymentController extends Controller
     public function store()
     {
         // Get the active PIN from cache
-        $activePin = Cache::get('active-pin');
+        $activePin = Cache::get('ACTIVE-PIN');
+        $transactionID = Cache::get("PIN-$activePin");
     
         // Get the latest transaction with the active PIN in process
-        $transaction = Transaction::where('pin', $activePin)
-            ->where('status', Transaction::TS_IN_PROCESS)
-            ->latest()
+        $transaction = Transaction::currentTransaction($transactionID)
             ->first();
     
         // If no transaction is found, return 404
