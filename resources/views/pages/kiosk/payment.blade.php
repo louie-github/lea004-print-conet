@@ -51,17 +51,28 @@
                                     </p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form" id="paymentForm" action="">
-                                        <div id="transactionDetails" class="mb-1"></div>
-                                        <div id="transDescription" class="mb-1"></div>
-                                        <div id="noCopies" class="mb-4"></div>
+                                    <form role="form" id="paymentForm"
+                                    action=''>
+                                        <div id="transactionDetails" class="mb-1">
+                                            Transaction ID: {{ $transaction->id }}
+                                        </div>
+                                        <div id="transDescription" class="mb-1">
+                                            Description: {{ $transaction->total_pages }} page/s
+                                        </div>
+                                        <div id="noCopies" class="mb-4">
+                                            Copies: {{ $transaction->no_copies }}
+                                        </div>
                                         <div class="mb-3">
                                             <h5 class="text-center">AMOUNT TO PAY:</h5>
-                                            <h3 class="text-center" id="amountToPay"></h3>
+                                            <h3 class="text-center" id="amountToPay">
+                                                {{ $transaction->amount_to_be_paid }}.00
+                                            </h3>
                                         </div>
                                         <div class="mb-3">
                                             <h5 class="text-center">TOTAL COLLECTED:</h5>
-                                            <h3 class="text-center" id="amountCollected"></h3>
+                                            <h3 class="text-center" id="amountCollected">
+                                                {{ $transaction->amount_collected }}.00
+                                            </h3>
                                         </div>
                                         <div class="text-center">
                                             <button type="button" id="printBtn"
@@ -146,58 +157,6 @@
             let paymentDetailsKiosk = document.getElementById('payment_details_kiosk');
             let messageElement = document.getElementById('error-message');
 
-            // Function to load dynamic content via AJAX
-            function loadDynamicContent() {
-                fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.response === 200) {
-                            const transDescription = data.transaction.total_pages + ' pages '
-                            const is_colored = data.transaction.is_colored ? 'Colored' : 'BW';
-                            const noCopies = 'Copies: ' + data.transaction.no_copies;
-                            const amountToPay = '₱' + data.transaction.amount_to_be_paid + ".00";
-                            const amountCollected = '₱' + data.transaction.amount_collected + ".00";
-
-                            transactionId = data.transaction.id;
-                            documentId = data.transaction.document_id
-                            paymentDetailsKiosk.style.display = 'block'; // Show transaction details section
-                            document.getElementById('transactionDetails').innerText = 'Transaction ID: ' +
-                                transactionId;
-                            document.getElementById('transDescription').innerText = 'Description: ' +
-                                transDescription;
-                            document.getElementById('noCopies').innerText = noCopies;
-                            document.getElementById('amountToPay').innerText = amountToPay;
-                            document.getElementById('amountCollected').innerText = amountCollected;
-
-                            // Update the iframe source only if the transaction ID changes
-                            if (documentId != '{{ $transaction->document_id ?? 'default_document_id' }}') {
-                                console.log('test', data);
-                                const iframeElement = document.querySelector('#pdf-iframe');
-                                if (!iframeElement) {
-                                    location.reload();
-                                    return;
-                                }
-                                iframeElement.src =
-                                    '{{ route('pdf.viewer', ['id' => 'TRANSACTION_DOCUMENT_ID']) }}'.replace(
-                                        'TRANSACTION_DOCUMENT_ID', data.transactions.document_id);
-                                location.reload();
-                                return;
-                            }
-
-                        } else {
-                            alert("No transaction found.");
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-            // Call the function initially
-            loadDynamicContent();
-
-            // Refresh content every 5 seconds
-            setInterval(loadDynamicContent, 5000);
-
-
             // Open the modal when "Yes" is clicked
             document.getElementById('openCancelModal').addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent default link behavior
@@ -274,7 +233,6 @@
 
             printBtn.addEventListener('click', function() {
                 // TODO: Validate data
-
                 // If validations pass, submit the form
                 paymentForm.submit();
             });
