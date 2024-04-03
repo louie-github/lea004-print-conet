@@ -58,47 +58,54 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 Route::get('/welcome', function () {
-    return view('welcome');
+	return view('welcome');
 });
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
-Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
-	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
-	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
-	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
-	Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
-	Route::get('/reset-password', [ResetPassword::class, 'show'])->middleware('guest')->name('reset-password');
-	Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('guest')->name('reset.perform');
-	Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
-	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
-	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/', function () {
+	return redirect('/dashboard');
+})->middleware('auth');
+Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
+Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
+Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
+Route::get('/reset-password', [ResetPassword::class, 'show'])->middleware('guest')->name('reset-password');
+Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('guest')->name('reset.perform');
+Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
+Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
+Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
+
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
-	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
+	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
+	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-	//documents
-	Route::resource('document',DocumentController::class);
 
 	// TODO: Consolidate kiosk routes and handle all via KioskController
 	// See PageController for example
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
 	Route::redirect('/kiosk', '/kiosk/qr');
-	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->middleware('admin')->name('index.kiosk');
-	Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kiosk.cancelled');
-	Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->middleware('admin')->name('content.kiosk');
-	Route::post('/kiosk/loadTransaction',[KioskController::class,'pinTransaction'])->middleware('admin')->name('kiosk.pinTransaction');
-	Route::get('/kiosk/printPreview/{transaction}',[KioskController::class,'printPreview'])->middleware('admin')->name('kiosk.printPreview');
+	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])
+		->middleware('admin')->name('index.kiosk');
+	Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])
+		->name('kiosk.cancelled');
+	Route::get('/kiosk/pin', [KioskController::class, 'pinInput'])
+		->middleware('admin')->name('content.kiosk');
+	Route::post('/kiosk/loadTransaction', [KioskController::class, 'pinTransaction'])
+		->middleware('admin')->name('kiosk.pinTransaction');
+	Route::get('/kiosk/printPreview/{transaction}', [KioskController::class, 'printPreview'])
+		->middleware('admin')->name('kiosk.printPreview');
+
+	// documents
+	Route::resource('document', DocumentController::class);
 
 	Route::resource('transaction', TransactionController::class);
 
-	//price
-	Route::put('price/{id}',[PriceControlller::class, 'update'])->name('price.update');
+	Route::put('price/{id}', [PriceControlller::class, 'update'])->name('price.update');
 
 	// Make sure this is last so that routes do not get overridden.
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
