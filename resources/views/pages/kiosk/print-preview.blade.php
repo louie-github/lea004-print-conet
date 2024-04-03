@@ -48,14 +48,19 @@
                                     </p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form" id="paymentForm">
+                                    <form role="form" id="paymentForm" action="">
                                         <div id="transactionDetails" class="mb-3"></div>
                                         <div id="transDescription" class="mb-3"></div>
                                         <div id="noCopies" class="mb-3"></div>
-                                        <div id="totalAmount" class="mb-3"></div>
+                                        <div class="mb-3">
+                                            <h5 class="text-center">TOTAL AMOUNT:</h5>
+                                            <h3 class="text-center" id="totalAmount"></h3>
+                                        </div>
                                         <div class="text-center">
                                             <button type="button" id="payNowBtn"
-                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Pay now</button>
+                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0 h5">
+                                                Pay now
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -120,7 +125,7 @@
                             const transDescription = data.transaction.total_pages + ' pages '
                             const is_colored = data.transaction.is_colored ? 'Colored' : 'BW';
                             const noCopies = 'Copies: ' + data.transaction.no_copies;
-                            const totalAmount = 'TOTAL: ₱' + data.transaction.amount_to_be_paid;
+                            const totalAmount = '₱' + data.transaction.amount_to_be_paid + ".00";
 
                             transactionId = data.transaction.id;
                             documentId = data.transaction.document_id
@@ -236,8 +241,7 @@
             const paymentForm = document.getElementById('paymentForm');
 
             payNowBtn.addEventListener('click', function() {
-                console.log('Payment TEST'); // Perform any necessary validations before submitting the form
-                // For example, you can check if all required fields are filled out
+                // TODO: Validate data
 
                 // If validations pass, submit the form
                 paymentForm.submit();
