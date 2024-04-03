@@ -60,7 +60,6 @@ use Illuminate\Support\Facades\DB;
 Route::get('/welcome', function () {
     return view('welcome');
 });
-Route::redirect('/kiosk', '/kiosk/qr');
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kioask.cancelled');
 
@@ -92,9 +91,10 @@ Route::group(['middleware' => 'auth'], function () {
 	// See PageController for example
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
 	Route::get('/kiosk/qr', [KioskController::class, 'indexQR'])->name('index.kiosk');
+	Route::redirect('/kiosk', '/kiosk/qr');
 	Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->name('content.kiosk');
 	Route::post('/kiosk/loadTransaction',[KioskController::class,'pinTransaction'])->name('kiosk.pinTransaction');
-	Route::get('/kiosk/printPreview/{transaction}',[KioskController::class,'printPreview'])->name('kiosk.printPreview');
+	Route::get('/kiosk/print/{transaction}',[KioskController::class,'print'])->name('kiosk.print');
 	Route::get('/kiosk/content',[KioskController::class,'loadContent'])->name('content.kiosk');
 
 	Route::resource('transaction', TransactionController::class);

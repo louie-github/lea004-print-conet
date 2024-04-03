@@ -49,8 +49,6 @@ class TransactionController extends Controller
             return compact('transaction');
         });
 
-        // TODO: Schedule task to set transaction as EXPIRED after
-        // 15 minutes.
         $transaction = $dbTransaction['transaction'];
 
         // Generate a unique 6-digit PIN.
