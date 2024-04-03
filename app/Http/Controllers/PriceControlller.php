@@ -15,6 +15,6 @@ class PriceControlller extends Controller
             'colored_price' => $request->colored_price,
         ]);
 
-        return back()->with('succes', 'Price Updated.');
+        return back()->with('succes', 'Price updated.');
     }
 }
