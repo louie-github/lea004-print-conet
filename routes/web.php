@@ -92,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
 	Route::prefix('kiosk')->controller(KioskController::class)
 		->middleware(['admin'])->group(function () {
-		Route::redirect('/', '/qr');
+		Route::redirect('/', '/kiosk/qr');
 		Route::get('/qr', 'indexQR')->name('index.kiosk');
 		Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
 		Route::get('/pin', 'pinInput')->name('content.kiosk');
