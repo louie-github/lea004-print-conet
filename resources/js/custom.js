@@ -27,7 +27,10 @@
 })();
 
 if(document.getElementById('alert')) {
-    let alertDiv = document.getElementById('alert')
+    let alertDiv = document.getElementById('alert');
+    if (alertDiv.textContent.trim()) {
+      alertDiv.firstElementChild.hidden = false;
+    }
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);

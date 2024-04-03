@@ -2253,6 +2253,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 if (document.getElementById('alert')) {
   var alertDiv = document.getElementById('alert');
+  if (alertDiv.textContent.trim()) {
+    alertDiv.firstElementChild.hidden = false;
+  }
   setTimeout(function () {
     alertDiv.remove();
   }, 5000);
