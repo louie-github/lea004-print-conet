@@ -53,8 +53,8 @@ class KioskController extends Controller
         return redirect()->route("kiosk.printPreview", ['transaction' => $transaction]);
     }
 
-    public function print(Request $request, Transaction $transaction) {
-        return view('pages.kiosk.print', compact('transaction'));
+    public function printPreview(Request $request, Transaction $transaction) {
+        return view('pages.kiosk.print-preview', compact('transaction'));
     }
 
     public function loadContent()
@@ -82,7 +82,7 @@ class KioskController extends Controller
             'url' => $transaction->document->url,
             'page_range' => $transaction->document->page_range
         ]);
-
+       
     }
 
     public function cancelTransaction(Request $request)

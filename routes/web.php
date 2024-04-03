@@ -93,7 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/kiosk/cancelled', [KioskController::class, 'cancelTransaction'])->name('kiosk.cancelled');
 	Route::get('/kiosk/pin',[KioskController::class,'pinInput'])->middleware('admin')->name('content.kiosk');
 	Route::post('/kiosk/loadTransaction',[KioskController::class,'pinTransaction'])->middleware('admin')->name('kiosk.pinTransaction');
-	Route::get('/kiosk/print/{transaction}',[KioskController::class,'print'])->middleware('admin')->name('kiosk.print');
+	Route::get('/kiosk/printPreview/{transaction}',[KioskController::class,'printPreview'])->middleware('admin')->name('kiosk.printPreview');
 
 	Route::resource('transaction', TransactionController::class);
 
