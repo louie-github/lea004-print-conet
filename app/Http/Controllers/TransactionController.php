@@ -32,9 +32,14 @@ class TransactionController extends Controller
     public function store(Request $request, Document $document)
     {
         $dbTransaction = DB::transaction(function () use ($document, $request) {
-            $printPages = explode('-', $request->page_range);
-            $pageStart = $printPages[0];
-            $pageEnd = $printPages[1];
+            if (!str_contains($request->page_range, "-")) {
+                $pageStart = $request->page_range;
+                $pageEnd = $request->page_range;
+            } else {
+                $printPages = explode('-', $request->page_range);
+                $pageStart = $printPages[0];
+                $pageEnd = $printPages[1];
+            }
             $numPages =  abs(($pageEnd - $pageStart)) + 1;
 
             // new transaction
@@ -83,8 +88,7 @@ class TransactionController extends Controller
                 ],
                 404
             );
-        }
-        else {
+        } else {
             return response()->json(
                 [
                     'response' => 200,
