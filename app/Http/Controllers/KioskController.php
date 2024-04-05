@@ -90,29 +90,6 @@ class KioskController extends Controller
         }
     }
 
-    public function loadContent()
-    {
-        $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
-
-        if(is_null($transaction)) {
-            return response()->json(
-                [
-                    'error' => 'No Transaction Found.',
-                    'response' => 404
-                ],
-                404
-            );
-        }
-
-        return response()->json([
-            'transactions' => $transaction,
-            'response' => 200,
-            'url' => $transaction->document->url,
-            'page_range' => $transaction->document->page_range
-        ]);
-        
-    }
-
     public function cancelTransaction(Request $request)
     {
 
