@@ -62,32 +62,36 @@ class KioskController extends Controller
         return view('pages.kiosk.payment', compact('transaction'));
     }
 
-    public function pulsePayment() {
-        $transaction = DB::transaction(function() {
+    public function pulsePayment(?Transaction $transaction = null) {
+        if (is_null($transaction)) {
             $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
+        }
+
+        DB::transaction(function() use ($transaction) {
             $transaction->increment('amount_collected');
             return $transaction;
-            
         });
 
         return response()->json(['transaction_id' => $transaction->id], 200);
     }
 
     public function print(Transaction $transaction) {
-        $response = Http::post('http://127.0.0.1:48250/print', [
-            "filename" => $transaction->document->url,
-            "has_color" => $transaction->is_colored,
-            "page_start" => $transaction->page_start,
-            "page_end" => $transaction->page_end,
-            "num_copies" => $transaction->no_copies
-        ]);
+        // $response = Http::post('http://127.0.0.1:48250/print', [
+        //     "filename" => $transaction->document->url,
+        //     "has_color" => $transaction->is_colored,
+        //     "page_start" => $transaction->page_start,
+        //     "page_end" => $transaction->page_end,
+        //     "num_copies" => $transaction->no_copies
+        // ]);
 
-        if ($response->status() == 200) {
-            return back()->with("succes", "Your print job has been sent.");
-        } else {
-            $error = $response->json()['message'];
-            return back()->with("error", "Unknown error: $error");
-        }
+        // if ($response->status() == 200) {
+        //     return back()->with("succes", "Your print job has been sent.");
+        // } else {
+        //     $error = $response->json()['message'];
+        //     return back()->with("error", "Unknown error: $error");
+        // }
+
+        return back()->with("succes", "Your print job has been sent.");
     }
 
     public function cancelTransaction(Request $request)

@@ -46,6 +46,13 @@
                                             Print
                                         </button>
                                     </div>
+                                    <div class="text-center">
+                                        <button type="button" id="printBtn"
+                                            class="btn bg-gradient-secondary w-100 mt-4 mb-0"
+                                            onclick="addAmount();">
+                                            Simulate insert coin (₱1)
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                             <div class="card-footer text-center pt-0 px-lg-2 px-1">
@@ -154,6 +161,10 @@
             })
             .catch(error => console.error('Error:', error));
     }, 500);
+
+    function addAmount() {
+        fetch("{{ route('pulsePayment', ['transaction' => $transaction]) }}");
+    }
 </script>
 
 <script>
