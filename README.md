@@ -2,6 +2,17 @@
 
 https://laravel.com/docs/10.x
 
+## Docker deployment
+A work-in-progress Docker deployment can be started by running:
+```
+docker-compose up -d
+```
+This starts up a MariaDB container as well as a container for the
+main application.
+
+Note that this is not yet suitable for development work. If you change
+the contents of files, it will not be reflected.
+
 ## Installation
 
 First, clone this repository and check out the correct branch.

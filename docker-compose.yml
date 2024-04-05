@@ -1,0 +1,17 @@
+services:
+
+  web:
+    depends_on:
+      - db
+    build: .
+    ports:
+      - "8000:8000"
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: itsamerootio
+      MARIADB_DATABASE: laravel
+      MARIADB_USER: laravel
+      MARIADB_PASSWORD: lea004printconet
