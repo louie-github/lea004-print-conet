@@ -7,8 +7,7 @@ A work-in-progress Docker deployment can be started by running:
 ```
 docker-compose up -d
 ```
-This starts up a MariaDB container as well as a container for the
-main application.
+This starts up a MariaDB container as well as a container for the main application.
 
 Note that this is not yet suitable for development work. If you change
 the contents of files, it will not be reflected.
@@ -28,7 +27,7 @@ composer install
 Note: If you are deploying this server to production, you can run the
 alternative command:
 ```bash
-composer install --optimize-autoloader --no-dev
+composer install --optimize-autoloader
 ```
 
 Then, set up your .env file:
@@ -39,15 +38,15 @@ cp .env.example .env
 Importantly, change the line below to match the URL at which you will be
 hosting the web app:
 ```ini
-KIOSK_URL=https://shiner-refined-subtly.ngrok-free.app/kiosk/process
+KIOSK_URL=https://print-conet.947825.xyz
 ```
 
 Moreover, you should also change the lines below to match your database
 setup:
 ```ini
 DB_DATABASE=laravel
-DB_USERNAME=
-DB_PASSWORD=
+DB_USERNAME=laravel
+DB_PASSWORD=password
 ```
 Make sure that you have already created the necessary users and
 databases beforehand.
@@ -76,7 +75,6 @@ To run the development web server, run:
 ```bash
 php artisan serve
 ```
-
 
 By default, this will expose your web app at http://localhost:8000.
 
@@ -120,3 +118,4 @@ Test account:
 ```
 email: test@test.com
 pass: password
+```
