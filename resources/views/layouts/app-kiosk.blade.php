@@ -19,7 +19,7 @@
     <script src="{{asset('https://kit.fontawesome.com/42d5adcbca.js')}}" crossorigin="anonymous"></script>
     <link href="{{asset('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
     <!-- CSS Files -->
-    <link id="pagestyle" href="{{asset('assets/css/argon-dashboard.css')}}" rel="stylesheet" />
+    @vite(['resources/scss/argon-dashboard.scss'])
 </head>
 
 <body class="{{ $class ?? '' }}">
