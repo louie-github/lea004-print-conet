@@ -14,33 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/**
- * @todo 
- * 
- * 1. add no of copies in --done
- * ADMIN
- * 1. setup admin account
- * 2. update migration admin
- * 3. dashboard admin
- *    1. view all transaction & document- done
- *    2. view all users - done
- *    3. view total sales - done
- *    4. update print price - done
- * 
- * KIOSK
- * 1. QR Page --> token identification
- * 2. Preview document and Prices
- * 3. Payment page (with print trigger) 
- * 
- * API
- * 1. create api to send print details --> post  to printlab
- * 2. api for receiving the print status and payment status
- * 3. activity logs
- * 4. error handling
- * 
- * 
- */
-
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
