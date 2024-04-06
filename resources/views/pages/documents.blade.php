@@ -6,15 +6,16 @@
         <div class="row">
             <div class="col-md-7 mt-4">
                 <div class="card">
-                    <div class="card-header pb-0 px-3">
-                        <div class="row align-items-center">
+                    <div class="card-header">
+                        <div class="row align-items-start">
                             <div class="col">
                                 <h6 class="mb-0">Document Information</h6>
                             </div>
-                            <div class="col text-end">
-                                <a class="btn bg-gradient-dark mb-0" data-bs-toggle="modal" data-bs-target="#addFileModal">
+                            <div class="col text-end text-nowrap">
+                                <a class="btn btn-primary mb-0"
+                                   data-bs-toggle="modal" data-bs-target="#addFileModal">
                                     <i class="fas fa-plus"></i>
-                                    &nbsp;&nbsp;Add File
+                                    &nbsp;&nbsp;Upload
                                 </a>
                             </div>
                         </div>
@@ -22,7 +23,7 @@
                     <div id="alert">
                         @include('components.alert')
                     </div>
-                    <div class="card-body pt-4 p-3">
+                    <div class="card-body">
                         <ul class="list-group">
                             @foreach ($documents as $document)
                                 <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
@@ -63,18 +64,18 @@
             </div>
             <div class="col-md-5 mt-4">
                 <div class="card h-100 mb-4">
-                    <div class="card-header pb-0 px-3">
-                        <div class="row">
-                            <div class="col-md-6">
+                    <div class="card-header">
+                        <div class="row w-100">
+                            <div class="col">
                                 <h6 class="mb-0">Transaction History</h6>
                             </div>
-                            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="col-auto text-end d-flex justify-content-end align-items-center">
                                 <i class="far fa-calendar-alt me-2"></i>
                                 <small>{{ now()->format('M d, Y') }}</small>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body pt-4 p-3">
+                    <div class="card-body">
                         <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Newest</h6>
                         <ul class="list-group">
                             @foreach ($transactions as $transaction)
@@ -122,7 +123,7 @@
                         @csrf
                         <div class="mb-2">
                             <label for="text" class="form-label">Document Name</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="mb-2">
                             <label for="file" class="form-label">Select File</label>
@@ -141,7 +142,7 @@
                             <input type="hidden" id="pageRangeSlider" name="page_range_slider">
                             <div id="pageRangeSliderContainer"></div>
                         </div> --}}
-                        <div class="d-flex justify-content-between">
+                        <div class="mt-4 d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Upload</button>
                             <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
                         </div>
