@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Document;
 use App\Models\Price;
+use App\Models\PrinterActivity;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -41,5 +42,6 @@ class DatabaseSeeder extends Seeder
         // Document::factory()->count(10)->create();
 
         Price::factory()->create();
+        PrinterActivity::factory()->count(10)->create();
     }
 }

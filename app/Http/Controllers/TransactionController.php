@@ -45,7 +45,7 @@ class TransactionController extends Controller
                 'total_pages' => $numPages,
                 'page_start' => $pageStart,
                 'page_end' => $pageEnd,
-                'total_pages' => $numPages,
+            'total_pages' => $numPages,
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies,
                 'amount_collected' => 0,
                 'is_colored' => $request->color === 'colored' ? 1 : 0,
