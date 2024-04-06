@@ -5,51 +5,42 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
-use App\Models\Transaction;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Smalot\PdfParser\Parser;
 
 class DocumentController extends Controller
 {
-    public function pdfViewer($id) {
+    public function pdfViewer($id)
+    {
         $document = Document::findOrFail($id);
-        $path = Storage::path($document->url ); 
-    
-        if (!file_exists($path)  ) {
+        $path = Storage::path($document->url);
+
+        if (!file_exists($path)) {
             abort(404, 'File not found');
         }
-    
+
         $file = file_get_contents($path);
         $response = response()->make($file, 200);
         $response->header('Content-Type', 'application/pdf');
         return $response;
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(DocumentRequest $request)
     {
         $file = $request->file('file');
-        $fileName = time() . '_' . $request->name;
-        $filePath = $file->storeAs('files', $fileName);
-
-        // Count pages in the uploaded PDF file
-        $parser = new Parser();
-        $pdf = $parser->parseFile(storage_path('app/' . $filePath));
-        $pagesCount = count($pdf->getPages());
+        $fileExtension = $file->getClientOriginalExtension();
+        $fileName = time() . '_' . $request->name . '.' . $fileExtension;
+        // Store publicly to easily load iframes.
+        $filePath = $file->storeAs('public', $fileName);
 
         // Store file upload details in the database
         Document::create([
             'user_id' => auth()->user()->id,
             'url' => $filePath,
             'name' => $request->name,
-            'page_range' => "1," . $pagesCount,
-            'total_pages' => $pagesCount,
         ]);
 
         return back()->with('succes', 'Document succesfully uploaded');
@@ -61,7 +52,7 @@ class DocumentController extends Controller
     public function show(Document $document)
     {
         $price = Price::first();
-        return view('pages.documents.viewPdf',compact('document', 'price'));
+        return view('pages.documents.viewFile', compact('document', 'price'));
     }
 
     /**
@@ -69,7 +60,6 @@ class DocumentController extends Controller
      */
     public function edit(string $id)
     {
-        
     }
 
     /**
@@ -77,8 +67,6 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-     
-
     }
 
     /**
@@ -88,5 +76,4 @@ class DocumentController extends Controller
     {
         //
     }
-
 }
