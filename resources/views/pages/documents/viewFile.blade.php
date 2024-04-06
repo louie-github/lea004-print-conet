@@ -9,10 +9,10 @@
                     <div class="card-header pb-0 px-3">
                         <div class="row align-items-center mb-3">
                             <div class="col">
-                                <h6 class="mb-0">{{$document->name}}</h6>
-                                <span class="text-xs">Total Page/s:
-                                    <span class="text-dark ms-sm-2 font-weight-bold">{{$document->total_pages}}</span>
-                                </span>
+                                <h6 class="mb-0">{{ $document->name }}</h6>
+                                {{-- <span class="text-xs">Total Page/s:
+                                    <span class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span>
+                                </span> --}}
                             </div>
 
                             <div class="col text-end">
@@ -27,17 +27,26 @@
                                 @include('components.alert')
                             </div>
                         </div>
-
-                        <iframe class="mb-5" src="{{ route('pdf.viewer', ['id' => $document->id]) }}" width="100%" height="620px"></iframe>
+                        @php
+                            $ext = pathinfo($document->url, PATHINFO_EXTENSION);
+                            $url = storage_path('public/' . $document->url);
+                            $url = env('KIOSK_BASE') . \Illuminate\Support\Facades\Storage::url($document->url);
+                        @endphp
+                        @if ($ext === 'pdf')
+                            <iframe class="mb-5" src="{{ route('pdf.viewer', ['id' => $document->id]) }}" width="100%"
+                                height="620px"></iframe>
+                        @else
+                            <iframe width="100%" height="620px" class="doc"
+                                src="https://docs.google.com/gview?url={{ url($url) }}&embedded=true"></iframe>
+                        @endif
                     </div>
-                   
                 </div>
             </div>
         </div>
         @include('layouts.footers.auth.footer')
     </div>
-     <!-- Settings Modal -->
-     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,7 +59,8 @@
                         <input name="document_id" type="hidden" value="{{ $document->id }}">
                         <div class="mb-2">
                             <label for="text" class="form-label">Document Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value={{$document->name}} disabled>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value={{ $document->name }} disabled>
                         </div>
                         <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
@@ -66,22 +76,26 @@
                         </div>
                         <div class="mb-2">
                             <label for="text" class="form-label">No of Copies</label>
-                            <input type="number" class="form-control" id="no_copies" name="no_copies" min="1" value=1>
+                            <input type="number" class="form-control" id="no_copies" name="no_copies" min="1"
+                                value=1>
                         </div>
                         <hr class=" mb-3 my-2">
 
                         <div class="d-flex flex-column mb-3">
-                            <span class="text-xs mb-2">Prices: 
-                               <div>
-                                <span class="text-dark ms-sm-2 font-weight-bold">Colored: ₱ {{$price->colored_price}}</span>
-                               </div>
-                               <div>
-                                <span class="text-dark ms-sm-2 font-weight-bold">Black & White: ₱ {{$price->black_and_white_price}}</span>
-                               </div>
+                            <span class="text-xs mb-2">Prices:
+                                <div>
+                                    <span class="text-dark ms-sm-2 font-weight-bold">Colored: ₱
+                                        {{ $price->colored_price }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-dark ms-sm-2 font-weight-bold">Black & White: ₱
+                                        {{ $price->black_and_white_price }}</span>
+                                </div>
                             </span>
                             <!-- Placeholder for dynamic description -->
                             <span class="text-xs">Description
-                                <span class="text-dark ms-sm-2 font-weight-bold" id="colorDescription"> {{ $document->total_pages }} pages (Black and White)</span>
+                                <span class="text-dark ms-sm-2 font-weight-bold" id="colorDescription">
+                                    {{ $document->total_pages }} pages (Black and White)</span>
                             </span>
                             <span class="mb-2 text-xs">TOTAL: 
                                 <span id="totalAmount" class="text-dark font-weight-bold ms-sm-2"> ₱  {{$document->total_pages * $price->black_and_white_price}}</span>
@@ -120,7 +134,7 @@
                             Please proceed to the kiosk for payment.
                         </p>
                         <button type="button" class="btn bg-gradient-dark w-25 align-self-center"
-                        data-bs-dismiss="modal">Close</button>
+                            data-bs-dismiss="modal">Close</button>
                         </form>
                     </div>
                 </div>
@@ -132,12 +146,14 @@
             });
         </script>
     @endif
-  <!-- jQuery -->
-  <script src="{{asset('https://code.jquery.com/jquery-3.6.0.min.js')}}"></script>
+    <!-- jQuery -->
+    <script src="{{ asset('https://code.jquery.com/jquery-3.6.0.min.js') }}"></script>
 
-  <!-- ion-rangeslider CSS and JS -->
-  <link rel="stylesheet" href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css')}}">
-  <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js')}}"></script>
+    <!-- ion-rangeslider CSS and JS -->
+    <link rel="stylesheet"
+        href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css') }}">
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js') }}">
+    </script>
 
 
 <script>

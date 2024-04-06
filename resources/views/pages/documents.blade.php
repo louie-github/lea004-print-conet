@@ -37,8 +37,8 @@
                                             <div class="d-flex flex-column">
                                                 <span class="text-xs">Added: <span
                                                         class="text-dark ms-sm-2 font-weight-bold">{{ $document->created_at }}</span></span>
-                                                <span class="text-xs">Total Page/s: <span
-                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span></span>
+                                                {{-- <span class="text-xs">Total Page/s: <span
+                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span></span> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -49,11 +49,16 @@
                                                 Delete
                                             </a>
                                         @endif
-                                        <a class="btn btn-link text-dark px-3 mb-0"
-                                            href="{{ route('document.show', ['document' => $document->id]) }}"><i
-                                                class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
+
+                                        @if (!auth()->user()->is_admin)
+                                            <a class="btn btn-link text-dark px-3 mb-0"
+                                                href="{{ route('document.show', ['document' => $document->id]) }}"><i
+                                                    class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
                                     </div>
-                                </li>
+                            @endif
+
+
+                            </li>
                             @endforeach
                         </ul>
                         <div class="mt-1 mb-4">
