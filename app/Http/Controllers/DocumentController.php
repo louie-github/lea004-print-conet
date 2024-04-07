@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 
 class DocumentController extends Controller
 {
@@ -33,14 +33,15 @@ class DocumentController extends Controller
         $file = $request->file('file');
         $fileExtension = $file->getClientOriginalExtension();
         $fileName = time() . '_' . $request->name . '.' . $fileExtension;
-        // Store publicly to easily load iframes.
         $filePath = $file->storeAs('public', $fileName);
 
-        // Store file upload details in the database
+        $pageCount = $this->getPageCount($fileExtension, $filePath);
         Document::create([
             'user_id' => auth()->user()->id,
             'url' => $filePath,
             'name' => $request->name,
+            'page_range' => "1," . $pageCount,
+            'total_pages' => $pageCount,
         ]);
 
         return back()->with('succes', 'Document succesfully uploaded');
@@ -55,25 +56,21 @@ class DocumentController extends Controller
         return view('pages.documents.viewFile', compact('document', 'price'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    private function getPageCount($fileExtension, $filePath)
     {
-    }
+        $filePath = storage_path('app/' . $filePath);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Document $document)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        switch ($fileExtension) {
+            case 'pdf':
+                return $this->countPdfPages($filePath);
+            case 'docx':
+                return $this->countWordPages($filePath);
+            case 'xlsx':
+                return $this->countExcelPages(request());
+            case 'csv':
+                return $this->countExcelPages(request());
+            default:
+                return 0; // Handle unsupported file extensions or other cases
+        }
     }
 }

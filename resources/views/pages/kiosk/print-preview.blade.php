@@ -78,13 +78,7 @@
                         </div>
                         <div
                             class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-
-                            @if ($transaction)
-                                <iframe id="pdf-iframe" class="mb-5"
-                                    src="{{ route('pdf.viewer', ['id' => $transaction->document_id]) }}" width="100%"
-                                    height="620px"></iframe>
-                            @endif
-
+                            @include('components.file-iframe')
                         </div>
                     </div>
                 </div>

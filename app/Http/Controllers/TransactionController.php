@@ -31,6 +31,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request, Document $document)
     {
+        $this->getWordPages();
         $dbTransaction = DB::transaction(function () use ($document, $request) {
             $pageRange = $request->page_range;
             if (!str_contains($pageRange, '-')) {
@@ -49,7 +50,7 @@ class TransactionController extends Controller
                 'total_pages' => $numPages,
                 'page_start' => $pageStart,
                 'page_end' => $pageEnd,
-            'total_pages' => $numPages,
+                'total_pages' => $numPages,
                 'amount_to_be_paid' => $request->total_amount  * $request->no_copies,
                 'amount_collected' => 0,
                 'is_colored' => $request->color === 'colored' ? 1 : 0,
@@ -87,8 +88,7 @@ class TransactionController extends Controller
                 ],
                 404
             );
-        }
-        else {
+        } else {
             return response()->json(
                 [
                     'response' => 200,
