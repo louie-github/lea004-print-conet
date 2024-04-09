@@ -17,7 +17,7 @@ class Controller extends BaseController
     public function countPdfPages($filePath)
     {
         $parser = new Parser();
-        $pdf = $parser->parseFile(storage_path('app/' . $filePath));
+        $pdf = $parser->parseFile($filePath);
         return count($pdf->getPages());
     }
 
