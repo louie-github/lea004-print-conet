@@ -54,11 +54,11 @@
                                             <a class="btn btn-link text-dark px-3 mb-0"
                                                 href="{{ route('document.show', ['document' => $document->id]) }}"><i
                                                     class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
+                                        @endif
                                     </div>
-                            @endif
 
 
-                            </li>
+                                </li>
                             @endforeach
                         </ul>
                         <div class="mt-1 mb-4">
