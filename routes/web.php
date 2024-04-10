@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\KioskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,12 +24,11 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PriceControlller;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\KioskController;
 
 Route::get('/welcome', function () {
 	return view('welcome');
 });
-Route::post('/pulsePayment', [KioskController::class, 'pulsePayment'])
-	->name('pulsePayment');
 
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
