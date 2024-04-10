@@ -3,6 +3,7 @@
 
 import logging
 from pathlib import Path
+from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -31,6 +32,7 @@ class PrintJob(BaseModel):
 
 class FileConvertJob(BaseModel):
     filename: str
+    output_filename: Optional[str] = Field(default=None)
 
 
 @app.get("/status/")
@@ -52,7 +54,7 @@ async def read_status():
 @app.post("/convert")
 async def convert_office_file(job: FileConvertJob):
     try:
-        output_filename = convert_office(job.filename)
+        output_filename = convert_office(job.filename, job.output_filename)
     except NotImplementedError:
         raise HTTPException(
             415,
