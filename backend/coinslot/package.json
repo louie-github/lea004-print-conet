@@ -1,0 +1,23 @@
+{
+    "name": "coinslot",
+    "version": "1.0.0",
+    "description": "Small utility to process and forward payment pulses from serial to API",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/louie-github/lea004-print-conet.git"
+    },
+    "author": "Louie Torres",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/louie-github/lea004-print-conet/issues"
+    },
+    "homepage": "https://github.com/louie-github/lea004-print-conet#readme",
+    "dependencies": {
+        "serialport": "^12.0.0"
+    }
+}
