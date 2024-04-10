@@ -22,24 +22,8 @@ class DocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:pdf,', 
+            'file' => 'required|file|mimes:pdf,docx,xlsx,csv', 
             'name' => 'required|string'
-        ];
-    }
-
-      /**
-     * Get custom error messages for validator errors.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'file.required' => 'Please upload a PDF file.',
-            'file.file' => 'The uploaded file must be a valid file.',
-            'file.mimes' => 'The file must be in PDF format.',
-            'name.required' => 'Please enter the document name.',
-            'name.string' => 'The document name must be a string.'
         ];
     }
 }
