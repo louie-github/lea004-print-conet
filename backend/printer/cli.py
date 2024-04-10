@@ -3,6 +3,7 @@
 
 import logging
 from pathlib import Path
+from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -31,6 +32,7 @@ class PrintJob(BaseModel):
 
 class FileConvertJob(BaseModel):
     filename: str
+    output_filename: Optional[str] = Field(default=None)
 
 
 @app.get("/status/")
@@ -52,6 +54,7 @@ async def read_status():
 @app.post("/convert")
 async def convert_office_file(job: FileConvertJob):
     filename = job.filename
+    output_filename = job.output_filename
     if filename.endswith(".docx"):
         convert_func = convert_word
     elif filename.endswith(".xlsx"):
@@ -62,7 +65,7 @@ async def convert_office_file(job: FileConvertJob):
         )
 
     try:
-        output_filename = convert_func(filename)
+        output_filename = convert_func(filename, output_filename)
     except Exception as e:
         raise HTTPException(
             500,
