@@ -6,9 +6,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Psy\Readline\Transient;
 
 class KioskController extends Controller
 {
@@ -39,7 +37,8 @@ class KioskController extends Controller
         return view('pages.kiosk.pin-input');
     }
 
-    public function pinTransaction(Request $request) {
+    public function pinTransaction(Request $request)
+    {
         $pin = $request->pin;
 
         // Protect against race conditions; try instead of check
@@ -54,20 +53,23 @@ class KioskController extends Controller
         return redirect()->route("kiosk.printPreview", ['transaction' => $transaction]);
     }
 
-    public function printPreview(Request $request, Transaction $transaction) {
+    public function printPreview(Request $request, Transaction $transaction)
+    {
         return view('pages.kiosk.print-preview', compact('transaction'));
     }
 
-    public function payment(Request $request, Transaction $transaction) {
+    public function payment(Request $request, Transaction $transaction)
+    {
         return view('pages.kiosk.payment', compact('transaction'));
     }
 
-    public function pulsePayment(?Transaction $transaction = null) {
+    public function pulsePayment(?Transaction $transaction = null)
+    {
         if (is_null($transaction)) {
             $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
         }
 
-        DB::transaction(function() use ($transaction) {
+        DB::transaction(function () use ($transaction) {
             $transaction->increment('amount_collected');
             return $transaction;
         });
@@ -75,7 +77,8 @@ class KioskController extends Controller
         return response()->json(['transaction_id' => $transaction->id], 200);
     }
 
-    public function print(Transaction $transaction) {
+    public function print(Transaction $transaction)
+    {
         // $response = Http::post('http://127.0.0.1:48250/print', [
         //     "filename" => $transaction->document->url,
         //     "has_color" => $transaction->is_colored,

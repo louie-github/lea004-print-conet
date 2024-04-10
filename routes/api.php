@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\KioskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::post('/kiosk/payment', [PaymentController::class, 'store'])->name('payment.store');
+Route::get('/pulsePayment', [KioskController::class, 'pulsePayment'])
+    ->name('pulsePayment');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

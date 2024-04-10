@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\KioskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,19 +24,18 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PriceControlller;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\KioskController;
 
 Route::get('/welcome', function () {
 	return view('welcome');
 });
-Route::get('/pulsePayment', [KioskController::class, 'pulsePayment'])
-	->name('pulsePayment');
 
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
 Route::redirect('/', '/dashboard');
 Route::redirect('/home', '/dashboard');
 
-Route::middleware(['guest'])->group(function() {
+Route::middleware(['guest'])->group(function () {
 	Route::get('/register', [RegisterController::class, 'create'])->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -65,15 +63,15 @@ Route::middleware(['auth'])->group(function () {
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
 	Route::prefix('kiosk')->controller(KioskController::class)
 		->middleware(['admin'])->group(function () {
-		Route::redirect('/', '/kiosk/qr');
-		Route::get('/qr', 'indexQR')->name('index.kiosk');
-		Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
-		Route::get('/pin', 'pinInput')->name('content.kiosk');
-		Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
-		Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
-		Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
-		Route::get('/print/{transaction}', 'print')->name('kiosk.print');
-	});
+			Route::redirect('/', '/kiosk/qr');
+			Route::get('/qr', 'indexQR')->name('index.kiosk');
+			Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
+			Route::get('/pin', 'pinInput')->name('content.kiosk');
+			Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
+			Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
+			Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
+			Route::get('/print/{transaction}', 'print')->name('kiosk.print');
+		});
 
 	// Non-visible pages
 	Route::resource('document', DocumentController::class);
