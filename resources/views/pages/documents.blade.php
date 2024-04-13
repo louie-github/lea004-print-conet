@@ -127,7 +127,7 @@
                         @csrf
                         <div class="mb-2">
                             <label for="text" class="form-label">Document Name</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="mb-2">
                             <label for="file" class="form-label">
