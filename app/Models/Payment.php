@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PrinterActivity extends Model
+class Payment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'transaction_id',
-        'isSuccess',
-        'description',
+        'user_id',
+        'amount',
     ];
 
-    public function documents(): HasMany
+    public function transaction(): BelongsTo
     {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsTo(Transaction::class);
     }
 }

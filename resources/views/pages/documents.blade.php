@@ -36,8 +36,8 @@
                                             <div class="d-flex flex-column">
                                                 <span class="text-xs">Added: <span
                                                         class="text-dark ms-sm-2 font-weight-bold">{{ $document->created_at }}</span></span>
-                                                {{-- <span class="text-xs">Total Page/s: <span
-                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span></span> --}}
+                                                <span class="text-xs">Total Page/s: <span
+                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -48,15 +48,10 @@
                                                 Delete
                                             </a>
                                         @endif
-
-                                        @if (!auth()->user()->is_admin)
-                                            <a class="btn btn-link text-dark px-3 mb-0"
-                                                href="{{ route('document.show', ['document' => $document->id]) }}"><i
-                                                    class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
-                                        @endif
+                                        <a class="btn btn-link text-dark px-3 mb-0"
+                                            href="{{ route('document.show', ['document' => $document->id]) }}"><i
+                                                class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
                                     </div>
-
-
                                 </li>
                             @endforeach
                         </ul>
@@ -127,14 +122,11 @@
                         @csrf
                         <div class="mb-2">
                             <label for="text" class="form-label">Document Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name">
                         </div>
                         <div class="mb-2">
-                            <label for="file" class="form-label">
-                                Select File (.pdf, .docx, .xlsx, .csv)
-                            </label>
-                            <input type="file" class="form-control" id="file" name="file" required
-                                accept=".pdf,.docx,.xlsx,.csv">
+                            <label for="file" class="form-label">Select File</label>
+                            <input type="file" class="form-control" id="file" name="file" required>
                         </div>
                         {{-- <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
@@ -153,12 +145,6 @@
                             <button type="submit" class="btn btn-primary">Upload</button>
                             <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
                         </div>
-                        <p>
-                            <small>
-                                Note that Word and Excel files may not be converted and
-                                printed perfectly. For best results, please upload a PDF.
-                            </small>
-                        </p>
                     </form>
                 </div>
             </div>
