@@ -5,7 +5,7 @@
             <h5 class="w-50 text-center">Visit our app by scanning the QR code below!</h5>
             <div id="kioskQr" class="my-3">
                 @php
-                    $url = config('app.kiosk_url');
+                    $url = config('app.url');
                 @endphp
                 {!!
                     QrCode::size(300)

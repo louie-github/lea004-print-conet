@@ -56,7 +56,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'kiosk_url' => env('KIOSK_URL', 'https://shiner-refined-subtly.ngrok-free.app'),
+    'kiosk_url' => env('KIOSK_URL', 'https://printtest.947825.xyz/kiosk'),
 
     'asset_url' => env('ASSET_URL'),
 
