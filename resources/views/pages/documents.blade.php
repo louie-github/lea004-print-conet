@@ -131,8 +131,11 @@
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="mb-2">
-                            <label for="file" class="form-label">Select File</label>
-                            <input type="file" class="form-control" id="file" name="file" required>
+                            <label for="file" class="form-label">
+                                Select File (.pdf, .docx, .xlsx, .csv)
+                            </label>
+                            <input type="file" class="form-control" id="file" name="file" required
+                                accept=".pdf,.docx,.xlsx,.csv">
                         </div>
                         {{-- <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
@@ -151,6 +154,12 @@
                             <button type="submit" class="btn btn-primary">Upload</button>
                             <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
                         </div>
+                        <p>
+                            <small>
+                                Note that Word and Excel files may not be converted and
+                                printed perfectly. For best results, please upload a PDF.
+                            </small>
+                        </p>
                     </form>
                 </div>
             </div>
