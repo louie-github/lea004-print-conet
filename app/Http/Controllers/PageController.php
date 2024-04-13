@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use App\Models\PrinterActivity;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,40 +15,44 @@ class PageController extends Controller
      * @param string $page
      * @return \Illuminate\View\View
      */
-
-    private function isAdmin()
-    {
+    
+     private function isAdmin(){
         return auth()->user()->is_admin;
-    }
+     }
 
-    private function pageQuery($page)
-    {
+    private function pageQuery($page){
         switch ($page) {
+            case 'my-documents':
+                $documents = Document::latest()->simplePaginate(5, ['*'], 'documents');
+                $transactions = Transaction::latest()->simplePaginate(10, ['*'], 'transactions');
+                return ['documents' => $documents, 'transactions' => $transactions];
+                break;
             case 'documents': // this is document page
                 $documentsQuery = Document::latest();
-                $transactionsQuery = Transaction::latest();
+                    $transactionsQuery = Transaction::latest();
 
-                if ($this->isAdmin()) {
-                    $documents = $documentsQuery->simplePaginate(5, ['*'], 'documents');
-                    $transactions = $transactionsQuery->simplePaginate(10, ['*'], 'transactions');
-                } else {
-                    $user_id = auth()->user()->id;
-                    $documents = $documentsQuery->where('user_id', $user_id)->simplePaginate(5, ['*'], 'documents');
-                    $transactions = $transactionsQuery->where('user_id', $user_id)->simplePaginate(10, ['*'], 'transactions');
-                }
+                    if ($this->isAdmin()) {
+                        $documents = $documentsQuery->simplePaginate(5, ['*'], 'documents');
+                        $transactions = $transactionsQuery->simplePaginate(10, ['*'], 'transactions');
+                    } else {
+                        $user_id = auth()->user()->id;
+                        $documents = $documentsQuery->where('user_id', $user_id)->simplePaginate(5, ['*'], 'documents');
+                        $transactions = $transactionsQuery->where('user_id', $user_id)->simplePaginate(10, ['*'], 'transactions');
+                    }
 
-                return view("pages.{$page}", compact('documents', 'transactions'));
+                    return view("pages.{$page}", compact('documents','transactions'));
                 break;
             case 'users':
                 $users = User::latest()->get();
                 return view("pages.{$page}", compact('users'));
                 break;
-            case 'printer-activities':
-                $activities = PrinterActivity::latest()->get();
-                return view("pages.printer-activities", compact('activities'));
+            case 'user-management':
+                $documents = Document::latest()->simplePaginate(5, ['*'], 'documents');
+                $transactions = Transaction::latest()->simplePaginate(10, ['*'], 'transactions');
+                return ['documents' => $documents, 'transactions' => $transactions];
                 break;
             default:
-                abort(404);
+                    abort(404);
                 // Handle default case if $page doesn't match any of the above cases
                 break;
         }

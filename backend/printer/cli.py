@@ -3,14 +3,12 @@
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
-from .office import convert_excel, convert_word
 from .printing import (
     PrinterHandle,
     get_default_printer,
@@ -30,11 +28,6 @@ class PrintJob(BaseModel):
     num_copies: int = Field(default=1)
 
 
-class FileConvertJob(BaseModel):
-    filename: str
-    output_filename: Optional[str] = Field(default=None)
-
-
 @app.get("/status/")
 async def read_status():
     try:
@@ -49,33 +42,6 @@ async def read_status():
                 ),
             },
         )
-
-
-@app.post("/convert")
-async def convert_office_file(job: FileConvertJob):
-    filename = job.filename
-    output_filename = job.output_filename
-    if filename.endswith(".docx"):
-        convert_func = convert_word
-    elif filename.endswith(".xlsx"):
-        convert_func = convert_excel
-    else:
-        raise HTTPException(
-            415, {"message": "Only .docx, .xlsx, and .csv files are accepted."}
-        )
-
-    try:
-        output_filename = convert_func(filename, output_filename)
-    except Exception as e:
-        raise HTTPException(
-            500,
-            {
-                "message": "An unknown error occurred while converting.",
-                "exception": repr(e),
-            },
-        )
-    else:
-        return {"message": "Conversion was successful", "filename": output_filename}
 
 
 @app.post("/print/")

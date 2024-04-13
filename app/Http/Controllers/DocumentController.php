@@ -5,43 +5,51 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
+use App\Models\Transaction;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use Smalot\PdfParser\Parser;
 
 class DocumentController extends Controller
 {
-    public function pdfViewer($id)
-    {
+    public function pdfViewer($id) {
         $document = Document::findOrFail($id);
-        $path = Storage::path($document->url);
-
-        if (!file_exists($path)) {
+        $path = Storage::path($document->url ); 
+    
+        if (!file_exists($path)  ) {
             abort(404, 'File not found');
         }
-
+    
         $file = file_get_contents($path);
         $response = response()->make($file, 200);
         $response->header('Content-Type', 'application/pdf');
         return $response;
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
     public function store(DocumentRequest $request)
     {
         $file = $request->file('file');
-        $fileExtension = $file->getClientOriginalExtension();
-        $fileName = time() . '_' . $request->name . '.' . $fileExtension;
-        $filePath = $file->storeAs('public', $fileName);
+        $fileName = time() . '_' . $request->name;
+        $filePath = $file->storeAs('files', $fileName);
 
-        $pageCount = $this->getPageCount($fileExtension, $filePath);
+        // Count pages in the uploaded PDF file
+        $parser = new Parser();
+        $pdf = $parser->parseFile(storage_path('app/' . $filePath));
+        $pagesCount = count($pdf->getPages());
+
+        // Store file upload details in the database
         Document::create([
             'user_id' => auth()->user()->id,
             'url' => $filePath,
             'name' => $request->name,
-            'page_range' => "1," . $pageCount,
-            'total_pages' => $pageCount,
+            'page_range' => "1," . $pagesCount,
+            'total_pages' => $pagesCount,
         ]);
 
         return back()->with('succes', 'Document succesfully uploaded');
@@ -53,24 +61,32 @@ class DocumentController extends Controller
     public function show(Document $document)
     {
         $price = Price::first();
-        return view('pages.documents.viewFile', compact('document', 'price'));
+        return view('pages.documents.viewPdf',compact('document', 'price'));
     }
 
-    private function getPageCount($fileExtension, $filePath)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        $filePath = storage_path('app/' . $filePath);
-
-        switch ($fileExtension) {
-            case 'pdf':
-                return $this->countPdfPages($filePath);
-            case 'docx':
-                return $this->countWordPages($filePath);
-            case 'xlsx':
-                return $this->countExcelPages(request());
-            case 'csv':
-                return $this->countExcelPages(request());
-            default:
-                return 0; // Handle unsupported file extensions or other cases
-        }
+        
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Document $document)
+    {
+     
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KioskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * @todo 
+ * 
+ * 1. add no of copies in --done
+ * ADMIN
+ * 1. setup admin account
+ * 2. update migration admin
+ * 3. dashboard admin
+ *    1. view all transaction & document- done
+ *    2. view all users - done
+ *    3. view total sales - done
+ *    4. update print price - done
+ * 
+ * KIOSK
+ * 1. QR Page --> token identification
+ * 2. Preview document and Prices
+ * 3. Payment page (with print trigger) 
+ * 
+ * API
+ * 1. create api to send print details --> post  to printlab
+ * 2. api for receiving the print status and payment status
+ * 3. activity logs
+ * 4. error handling
+ * 
+ * 
+ */
+
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -24,18 +52,19 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PriceControlller;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\KioskController;
 
 Route::get('/welcome', function () {
 	return view('welcome');
 });
+Route::get('/pulsePayment', [KioskController::class, 'pulsePayment'])
+	->name('pulsePayment');
 
 Route::get('/pdf-viewer/{id}', [DocumentController::class, 'pdfViewer'])->name('pdf.viewer');
 
 Route::redirect('/', '/dashboard');
 Route::redirect('/home', '/dashboard');
 
-Route::middleware(['guest'])->group(function () {
+Route::middleware(['guest'])->group(function() {
 	Route::get('/register', [RegisterController::class, 'create'])->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -63,15 +92,15 @@ Route::middleware(['auth'])->group(function () {
 	//Route::get('/kiosk/process',[KioskController::class,'kioskCachedRedirect'])->name('cache.kiosk');
 	Route::prefix('kiosk')->controller(KioskController::class)
 		->middleware(['admin'])->group(function () {
-			Route::redirect('/', '/kiosk/qr');
-			Route::get('/qr', 'indexQR')->name('index.kiosk');
-			Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
-			Route::get('/pin', 'pinInput')->name('content.kiosk');
-			Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
-			Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
-			Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
-			Route::get('/print/{transaction}', 'print')->name('kiosk.print');
-		});
+		Route::redirect('/', '/kiosk/qr');
+		Route::get('/qr', 'indexQR')->name('index.kiosk');
+		Route::post('/cancelled', 'cancelTransaction')->name('kiosk.cancelled');
+		Route::get('/pin', 'pinInput')->name('content.kiosk');
+		Route::post('/loadTransaction', 'pinTransaction')->name('kiosk.pinTransaction');
+		Route::get('/printPreview/{transaction}', 'printPreview')->name('kiosk.printPreview');
+		Route::get('/payment/{transaction}', 'payment')->name('kiosk.payment');
+		Route::get('/print/{transaction}', 'print')->name('kiosk.print');
+	});
 
 	// Non-visible pages
 	Route::resource('document', DocumentController::class);

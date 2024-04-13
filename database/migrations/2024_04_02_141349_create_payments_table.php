@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('printer_activities', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->nullable();
-            $table->boolean('isSuccess')->default(0);
-            $table->mediumText('description');
+            $table->foreignId('transaction_id');
+            $table->foreignId('user_id');
+            $table->integer('amount')->default(1);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('printer_activities');
+        Schema::dropIfExists('payments');
     }
 };

@@ -26,13 +26,13 @@ class Transaction extends Model
         'no_copies',
         'is_colored',
     ];
-
+    
     //transaction status
     const TS_PENDING = 'Pending';
     const TS_SUCCESS = 'Success';
     const TS_FAILED = 'Failed';
-    const TS_IN_PROCESS = 'In Process';
-    const TS_CANCELLED = 'Cancelled';
+    const TS_IN_PROCESS= 'In Process';
+    const TS_CANCELLED= 'Cancelled';
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -41,9 +41,12 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function document(): BelongsTo
-    {
+    public function document(): BelongsTo{
         return $this->belongsTo(Document::class);
+    }
+
+    public function payments(): HasMany {
+        return $this->hasMany(Payment::class);
     }
 
     protected function createdAt(): Attribute
@@ -55,7 +58,7 @@ class Transaction extends Model
 
     public function scopeSuccess(Builder $query): void
     {
-        $query->where('status', Transaction::TS_SUCCESS);
+        $query->where('status', Transaction::TS_SUCCESS );
     }
 
     public function scopeSuccessTransactionToday(Builder $query): void
@@ -63,7 +66,7 @@ class Transaction extends Model
         $query->whereDate('created_at', now()->toDateString());
     }
 
-
+  
     public function scopeCurrentTransaction(Builder $query,   $transactionId): void
     {
         $query->where('id', $transactionId)
