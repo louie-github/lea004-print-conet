@@ -55,8 +55,8 @@
                         <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
                             <select class="form-select" id="color" name="color">
-                                <option value="colored">Colored</option>
-                                <option value="black_and_white" selected>Black and White</option>
+                                <option value="colored" selected>Colored</option>
+                                <option value="black_and_white">Black and White</option>
                             </select>
                         </div>
                         <div class="mb-3">
