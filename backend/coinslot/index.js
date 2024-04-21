@@ -1,13 +1,15 @@
 import { SerialPort } from "serialport";
 import { ReadlineParser } from "@serialport/parser-readline";
 import fetchRetry from "fetch-retry";
+import { v4 as uuidv4 } from "uuid";
 
 const fetch = fetchRetry(global.fetch, {
     retries: 5,
     retryDelay: 1000,
 });
 
-const MATCH_LINE = "+";
+const PULSE_1_LINE = "+"; // Coin acceptor: 1 pulse = 1 PHP
+const PULSE_10_LINE = "0"; // Bill acceptor: 1 pulse = 10 PHP
 const PULSE_ENDPOINT = "http://localhost:8000/pulsePayment";
 
 let arduinoPath = null;
@@ -33,11 +35,23 @@ console.log("Opened port at port:", arduinoPath);
 
 function processLine(line) {
     line = line.trim();
-    if (line == MATCH_LINE) {
+    pulseValue = null;
+    if (line == PULSE_1_LINE) {
+        pulseValue = 1;
+    } else if (line == PULSE_10_LINE) {
+        pulseValue = 10;
+    }
+    if (!(pulseValue === null)) {
         callCount += 1;
         console.log("Line match found: ", line);
         // TODO: Add retries.
-        fetch(PULSE_ENDPOINT)
+        fetch(PULSE_ENDPOINT, {
+            method: "POST",
+            body: JSON.stringify({
+                id: uuidv4(),
+                pulseValue: pulseValue,
+            }),
+        })
             .then(() => {
                 console.log(`Called payment route (call count ${callCount})`);
             })
