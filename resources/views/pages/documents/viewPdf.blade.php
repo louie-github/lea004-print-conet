@@ -61,9 +61,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="pageRange" class="form-label">Page Range</label>
-                            <input type="text" class="form-control" id="pageRange"  value="1 - {{$document->total_pages}}" name="page_range" readonly>
-                            <input type="hidden" id="pageRangeSlider" name="page_range_slider">
-                            <div id="pageRangeSliderContainer"></div>
+                            <input type="text" class="form-control" id="pageRange" value="1 - {{$document->total_pages}}" name="page_range" readonly>
+                            <input id="pageRangeSliderContainer"></input>
                         </div>
                         <div class="mb-2">
                             <label for="text" class="form-label">No of Copies</label>
@@ -86,6 +85,8 @@
                             </span>
                             <span class="mb-2 text-xs">TOTAL: 
                                 <span id="totalAmount" class="text-dark font-weight-bold ms-sm-2"> ₱  {{$document->total_pages * $price->black_and_white_price}}</span>
+                                <!-- Hidden input for request body -->
+                                <input type="hidden" class="form-control" id="totalAmountInput" name="total_amount" value="">
                             </span>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -170,6 +171,7 @@ $(document).ready(function(){
             `${pageCount * numCopies} total pages (${colorTypeDescription})`
         );
         $('#totalAmount').text(`₱${totalPrice.toFixed(2)}`);
+        $('#totalAmountInput').val(totalPrice);
     }
 
     $('#color').change(updateDescription);

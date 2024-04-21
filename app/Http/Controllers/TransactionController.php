@@ -32,9 +32,13 @@ class TransactionController extends Controller
     public function store(Request $request, Document $document)
     {
         $dbTransaction = DB::transaction(function () use ($document, $request) {
-            $printPages = explode('-', $request->page_range);
-            $pageStart = $printPages[0];
-            $pageEnd = $printPages[1];
+            $pageRange = $request->page_range;
+            if (!str_contains($pageRange, '-')) {
+                $pageRange = "$pageRange-$pageRange";
+            }
+            $printPages = explode('-', $pageRange);
+            $pageStart = (int) $printPages[0];
+            $pageEnd = (int) $printPages[1];
             $numPages =  abs(($pageEnd - $pageStart)) + 1;
 
             // new transaction
