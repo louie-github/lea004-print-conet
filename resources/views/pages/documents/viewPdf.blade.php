@@ -55,8 +55,8 @@
                         <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
                             <select class="form-select" id="color" name="color">
-                                <option value="black_and_white" selected>Black and White</option>
                                 <option value="colored">Colored</option>
+                                <option value="black_and_white" selected>Black and White</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -86,7 +86,6 @@
                             </span>
                             <span class="mb-2 text-xs">TOTAL: 
                                 <span id="totalAmount" class="text-dark font-weight-bold ms-sm-2"> ₱  {{$document->total_pages * $price->black_and_white_price}}</span>
-                                <input type="hidden" class="form-control" id="totalAmountInput" name="total_amount" value="{{$document->total_pages * $price->black_and_white_price}}">
                             </span>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -146,6 +145,45 @@ $(document).ready(function(){
     var black_and_white_price = {{ $price->black_and_white_price }};
     var colored_price = {{ $price->colored_price }};
 
+    // Function to update description and total amount
+    function updateDescription() {
+        let pageRangeFrom = $("#pageRangeSliderContainer").data("from");
+        let pageRangeTo = $("#pageRangeSliderContainer").data("to");
+        let numCopies = parseInt($('#no_copies').val());
+        let selectedColor = $('#color').val();
+        let pageCount = (pageRangeTo - pageRangeFrom) + 1;
+
+        let pricePerPage, colorTypeDescription;
+        if (selectedColor === "colored") {
+            pricePerPage = colored_price;
+            colorTypeDescription = "Colored";
+        } else if (selectedColor === "black_and_white") {
+            pricePerPage = black_and_white_price;
+            colorTypeDescription = "Black and White";
+        } else {
+            pricePerPage = 1;
+            colorTypeDescription = "Unknown";
+        }
+
+        let totalPrice = pageCount * pricePerPage * numCopies
+        $('#colorDescription').text(
+            `${pageCount * numCopies} total pages (${colorTypeDescription})`
+        );
+        $('#totalAmount').text(`₱${totalPrice.toFixed(2)}`);
+    }
+
+    $('#color').change(updateDescription);
+    $('#no_copies').change(updateDescription);
+
+    function updateSlider(data) {
+        if (data.from === data.to) {
+            $("#pageRange").val(data.from);
+        } else {
+            $("#pageRange").val(`${data.from} - ${data.to}`);
+        }
+        updateDescription();
+    }
+
     $("#pageRangeSliderContainer").ionRangeSlider({
         type: "double",
         grid: true,
@@ -153,52 +191,13 @@ $(document).ready(function(){
         max: total_pages,
         from: 1,
         to: total_pages,
-        onChange: function (data) {
-            var pageRangeValue = data.from === data.to ? data.from.toString() : data.from + ' - ' + data.to;
-            $('#pageRange').val(pageRangeValue);
-            $('#pageRangeSlider').val(data.from + ',' + data.to);
-
-            // Update the details
-            updateDescription(data.from, data.to, black_and_white_price, colored_price);
-        },
+        onStart: updateSlider,
+        onChange: updateSlider,
     });
 
-    // Function to update description and total amount
-    function updateDescription(from, to, black_and_white_price, colored_price) {
-        var selectedColor = $('#color').val();
-        var pageCount = (to - from) + 1; // Adjust the page count calculation
 
-        if (selectedColor === 'colored') {
-            $('#colorDescription').text(pageCount + ' pages (Colored)');
-            var totalPrice = pageCount * colored_price;
-            $('#totalAmount').text('₱ ' + totalPrice.toFixed(2));
-        } else if (selectedColor === 'black_and_white') {
-            $('#colorDescription').text(pageCount + ' pages (Black and White)');
-            var totalPrice = pageCount * black_and_white_price;
-            $('#totalAmount').text('₱ ' + totalPrice.toFixed(2));
-        } else {
-            $('#colorDescription').text('Select a color to see the description');
-            $('#totalAmount').text('₱ 0.00');
-        }
-
-        $('#totalAmountInput').val(totalPrice.toFixed(2));
-    }
-
-    // Trigger updateDescription when the color selection changes
-    $('#color').change(function () {
-        var from = parseInt($('#pageRangeSlider').val().split(',')[0]);
-        var to = parseInt($('#pageRangeSlider').val().split(',')[1]);
-
-        if ( isNaN(from) & isNaN(to)) {
-            var from = 1;
-            var to = total_pages;
-        }
-    
-        // Update the details
-        updateDescription(from, to, black_and_white_price, colored_price);
-    });
 });
 </script>
-   
-    
+
+
 @endsection

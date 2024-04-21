@@ -1,4 +1,4 @@
-# PRINTER KIOSK WEB
+# PRINTER KIOSK WEB (BETA)
 
 https://laravel.com/docs/10.x
 
@@ -17,7 +17,7 @@ the contents of files, it will not be reflected.
 First, clone this repository and check out the correct branch.
 ```bash
 git clone git@github.com:louie-github/lea004-print-conet.git
-git checkout alpha-testing
+git checkout beta-testing
 ```
 
 Then, install dependencies via Composer.
