@@ -10,9 +10,8 @@
                             <div class="card-header pb-0 text-start">
                                 <h4 class="font-weight-bolder">Payment details</h4>
                                 <p class="mb-0">
-                                    Please insert the coins into the coin slot.
-                                    Note that this kiosk <b>does not output change</b>.
-                                    Any excess payments will be ignored.
+                                    Note that this kiosk <b>does not dispense change</b>.
+                                    Any excess payments will not be returned to you.
                                 </p>
                             </div>
                             <div class="card-body">
@@ -22,7 +21,12 @@
                                         Transaction ID: {{ $transaction->id }}
                                     </div>
                                     <div id="transDescription" class="mb-1">
-                                        Description: {{ $transaction->total_pages }} page/s
+                                        @php
+                                            $colorType = $transaction->is_colored
+                                                ? "Colored" : "Black and White";
+                                        @endphp
+                                        Description: {{ $transaction->total_pages }} 
+                                                     page/s ({{ $colorType }})
                                     </div>
                                     <div id="noCopies" class="mb-4">
                                         Copies: {{ $transaction->no_copies }}
