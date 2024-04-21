@@ -14,6 +14,7 @@ uvicorn = { extras = ["standard"], version = "^0.27.1" }
 pypdf = "^4.1.0"
 pyserial = "^3.5"
 requests = "^2.31.0"
+comtypes = "^1.4.1"
 
 [tool.poetry.scripts]
 cli = 'printer.cli:main'
