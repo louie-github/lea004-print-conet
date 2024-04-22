@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
+from .office import convert_office
 from .printing import (
     PrinterHandle,
     get_default_printer,
@@ -28,6 +29,10 @@ class PrintJob(BaseModel):
     num_copies: int = Field(default=1)
 
 
+class FileConvertJob(BaseModel):
+    filename: str
+
+
 @app.get("/status/")
 async def read_status():
     try:
@@ -42,6 +47,35 @@ async def read_status():
                 ),
             },
         )
+
+
+@app.post("/convert")
+async def convert_office_file(job: FileConvertJob):
+    try:
+        output_filename = convert_office(job.filename)
+    except NotImplementedError:
+        raise HTTPException(
+            415,
+            {
+                "message": "Only .doc(x), .xls(x), and .csv files are accepted.",
+                "job": jsonable_encoder(job),
+            },
+        )
+    except Exception as e:
+        raise HTTPException(
+            500,
+            {
+                "message": "An unknown error occurred while converting.",
+                "exception": repr(e),
+                "job": jsonable_encoder(job),
+            },
+        )
+    else:
+        return {
+            "message": "Conversion was successful",
+            "filename": output_filename,
+            "job": jsonable_encoder(job),
+        }
 
 
 @app.post("/print/")

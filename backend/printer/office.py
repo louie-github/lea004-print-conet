@@ -14,32 +14,33 @@ import comtypes.client
 
 
 def convert_word(filename: str, output_filename: str):
-    output_path = Path(output_filename).resolve()
     word = comtypes.client.CreateObject("Word.Application")
     word.Visible = False
     word.ActivePrinter = "Microsoft Print to PDF"
     document = word.Documents.Open(filename)
-    document.PrintOut(PrintToFile=True, OutputFileName=str(output_path), Append=False)
+    document.PrintOut(
+        PrintToFile=True,
+        OutputFileName=str(Path(output_filename).resolve()),
+        Append=False,
+    )
     document.Close()
-    # Keep Word open for faster calls.
+    # Keep Word open so subsequent calls aren't as slow.
     # word.Quit()
 
 
 def convert_excel(filename: str, output_filename: str):
-    output_path = Path(output_filename).resolve()
     excel = comtypes.client.CreateObject("Excel.Application")
     excel.Visible = False
-    print(f"Active printer: {excel.ActivePrinter}")
     workbook = excel.Workbooks.Open(filename)
     workbook.PrintOut(
         PrintToFile=True,
-        PrToFileName=str(output_path),
+        PrToFileName=str(Path(output_filename).resolve()),
         # For some reason, setting excel.ActivePrinter doesn't work, so
         # we just do it here.
         ActivePrinter="Microsoft Print to PDF",
     )
     workbook.Close()
-    # Keep Excel open for faster calls.
+    # Keep Excel open so subsequent calls aren't as slow.
     # excel.Quit()
 
 
@@ -47,6 +48,7 @@ def convert_office(filename: str, output_filename: Optional[str] = None):
     basename, ext = os.path.splitext(filename)
     if output_filename is None:
         output_filename = basename + ".pdf"
+
     if ext in {".doc", ".docx"}:
         convert_word(filename, output_filename)
     elif ext in {".xls", ".xlsx", ".csv"}:
