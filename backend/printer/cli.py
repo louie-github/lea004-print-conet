@@ -35,7 +35,7 @@ class FileConvertJob(BaseModel):
     output_filename: Optional[str] = Field(default=None)
 
 
-@app.get("/status/")
+@app.get("/status")
 async def read_status():
     try:
         return get_printer_status(app.state.printer_handle)
@@ -80,7 +80,7 @@ async def convert_office_file(job: FileConvertJob):
         }
 
 
-@app.post("/print/")
+@app.post("/print")
 async def queue_print_job(job: PrintJob):
     job.filename = str(
         (
