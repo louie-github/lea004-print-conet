@@ -122,11 +122,11 @@ async def queue_print_job(job: PrintJob):
 def log_printer_status(printer_handle):
     printer_status = get_printer_status(printer_handle)
     logging.info("Printer status:")
-    logging.info(f"  - Name: {printer_status["name"]}")
-    logging.info(f"  - Port: {printer_status["port"]}")
-    logging.info(f"  - Driver: {printer_status["driver"]}")
-    logging.info(f"  - Current status: {printer_status["status"]}")
-    logging.info(f"  - Number of jobs: {printer_status["jobs"]}")
+    logging.info(f'  - Name: {printer_status["name"]}')
+    logging.info(f'  - Port: {printer_status["port"]}')
+    logging.info(f'  - Driver: {printer_status["driver"]}')
+    logging.info(f'  - Current status: {printer_status["status"]}')
+    logging.info(f'  - Number of jobs: {printer_status["jobs"]}')
 
 
 def cli_main(printer_handle):
@@ -137,10 +137,10 @@ def main(args=__import__("sys").argv[1:]):
     printer = None
     run_api = "api" in args
 
-    logging.basicConfig(format="[%(levelname)s] %(message)s", level=logging.DEBUG)
+    logging.basicConfig(format="[%(levelname)s] %(message)s", level=logging.INFO)
 
     if not printer:
-        logging.debug("No printer specified; using default printer.")
+        logging.info("No printer specified; using default printer.")
         printer = get_default_printer()
 
     with PrinterHandle(printer) as printer_handle:

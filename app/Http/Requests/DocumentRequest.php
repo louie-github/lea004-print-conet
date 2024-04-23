@@ -22,7 +22,7 @@ class DocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:pdf,docx,xlsx,csv', 
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,csv',
             'name' => 'required|string'
         ];
     }

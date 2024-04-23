@@ -26,6 +26,7 @@ def convert_word(filename: str, output_filename: str):
     document.Close()
     # Keep Word open so subsequent calls aren't as slow.
     # word.Quit()
+    return output_filename
 
 
 def convert_excel(filename: str, output_filename: str):
@@ -42,6 +43,7 @@ def convert_excel(filename: str, output_filename: str):
     workbook.Close()
     # Keep Excel open so subsequent calls aren't as slow.
     # excel.Quit()
+    return output_filename
 
 
 def convert_office(filename: str, output_filename: Optional[str] = None):
@@ -50,9 +52,9 @@ def convert_office(filename: str, output_filename: Optional[str] = None):
         output_filename = basename + ".pdf"
 
     if ext in {".doc", ".docx"}:
-        convert_word(filename, output_filename)
+        return convert_word(filename, output_filename)
     elif ext in {".xls", ".xlsx", ".csv"}:
-        convert_excel(filename, output_filename)
+        return convert_excel(filename, output_filename)
     else:
         raise NotImplementedError(f"Cannot handle filetype '{ext}'")
 

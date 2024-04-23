@@ -57,6 +57,12 @@ php artisan key:generate
 php artisan migrate:fresh --seed
 ```
 
+Also, enable and link the public storage folder:
+```
+php artisan storage:link
+```
+
+
 Then, install the necessary Node modules:
 ```bash
 npm install

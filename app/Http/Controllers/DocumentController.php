@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
+use Illuminate\Http\File;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -25,20 +28,48 @@ class DocumentController extends Controller
         return $response;
     }
 
+    protected function convertOfficeFile(string $filePath) {
+        $response = Http::post('http://172.21.80.1:48250/convert', [
+            "filename" => $filePath
+        ]);
+        if ($response->status() === 200) {
+            Storage::delete($filePath);
+            return $response->json()['filename'];
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(DocumentRequest $request)
     {
         $file = $request->file('file');
-        $fileExtension = $file->getClientOriginalExtension();
-        $fileName = time() . '_' . $request->name . '.' . $fileExtension;
-        $filePath = $file->storeAs('public', $fileName);
+        // Detect via MIME type instead of using client extension
+        $fileExtension = $file->extension();
+        $publicFilePath = $file->storePublicly('files');
+        switch ($fileExtension) {
+            case 'pdf':
+                break; // Do nothing.
+            case 'doc':
+            case 'docx':
+            case 'xlsx':
+            case 'csv':
+                $publicFilePath = $this->convertOfficeFile($publicFilePath);
+                if (is_null($publicFilePath)) {
+                    return back()->with('error', 'Failed to convert document.');
+                }
+                break;
+            default:
+                // TODO: Handle unsupported file extensions or other cases
+                return back()->with('error', 'Unsupported file type.');
+        }
 
-        $pageCount = $this->getPageCount($fileExtension, $filePath);
+        $pageCount = $this->getPageCount('pdf', $publicFilePath);
         Document::create([
             'user_id' => auth()->user()->id,
-            'url' => $filePath,
+            'url' => $publicFilePath,
             'name' => $request->name,
             'page_range' => "1," . $pageCount,
             'total_pages' => $pageCount,

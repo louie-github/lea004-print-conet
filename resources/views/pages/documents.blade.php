@@ -132,10 +132,10 @@
                         </div>
                         <div class="mb-2">
                             <label for="file" class="form-label">
-                                Select File (.pdf, .docx, .xlsx, .csv)
+                                Select File (.pdf, .doc, .docx, .xls, .xlsx, .csv)
                             </label>
                             <input type="file" class="form-control" id="file" name="file" required
-                                accept=".pdf,.docx,.xlsx,.csv">
+                                accept=".pdf,.doc,.docx,.xls,.xlsx,.csv">
                         </div>
                         {{-- <div class="mb-2">
                             <label for="color" class="form-label">Select Color</label>
@@ -156,8 +156,9 @@
                         </div>
                         <p>
                             <small>
-                                Note that Word and Excel files may not be converted and
-                                printed perfectly. For best results, please upload a PDF.
+                                Word (.doc, .docx) and Excel (.xls, .xlsx, .csv) files
+                                will be converted internally to PDF. For the best and
+                                most accurate results, please upload a PDF directly.
                             </small>
                         </p>
                     </form>
