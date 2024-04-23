@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
-use Illuminate\Http\File;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,7 +27,8 @@ class DocumentController extends Controller
     }
 
     protected function convertOfficeFile(string $filePath) {
-        $response = Http::post('http://172.21.80.1:48250/convert', [
+        $backendUrl = config('backend_url');
+        $response = Http::post("$backendUrl/convert", [
             "filename" => $filePath
         ]);
         if ($response->status() === 200) {
