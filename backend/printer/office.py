@@ -15,7 +15,7 @@ import comtypes.client
 
 def convert_word(filename: str, output_filename: str):
     word = comtypes.client.CreateObject("Word.Application")
-    word.Visible = False
+    # word.Visible = False
     word.ActivePrinter = "Microsoft Print to PDF"
     document = word.Documents.Open(filename)
     document.PrintOut(
@@ -31,11 +31,11 @@ def convert_word(filename: str, output_filename: str):
 
 def convert_excel(filename: str, output_filename: str):
     excel = comtypes.client.CreateObject("Excel.Application")
-    excel.Visible = False
+    # excel.Visible = False
     workbook = excel.Workbooks.Open(filename)
     workbook.PrintOut(
         PrintToFile=True,
-        PrToFileName=str(Path(output_filename).resolve()),
+        PrToFileName=output_filename,
         # For some reason, setting excel.ActivePrinter doesn't work, so
         # we just do it here.
         ActivePrinter="Microsoft Print to PDF",
@@ -51,11 +51,12 @@ def convert_office(filename: str, output_filename: Optional[str] = None):
     if output_filename is None:
         output_filename = basename + ".pdf"
 
+    filename = os.path.abspath(filename)
+    output_filename = os.path.abspath(output_filename)
+
     if ext in {".doc", ".docx"}:
         return convert_word(filename, output_filename)
     elif ext in {".xls", ".xlsx", ".csv"}:
         return convert_excel(filename, output_filename)
     else:
         raise NotImplementedError(f"Cannot handle filetype '{ext}'")
-
-    return True
