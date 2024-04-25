@@ -5,6 +5,7 @@ import logging
 import shlex
 import subprocess
 from pathlib import Path
+from typing import Dict, List
 
 import win32print
 
@@ -58,17 +59,27 @@ class PrinterHandle:
         self.handle = win32print.OpenPrinter(self.printer)
         return self.handle
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def close(self):
         if self.handle is not None:
             win32print.ClosePrinter(self.handle)
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.close()
 
 
 def get_default_printer():
     return win32print.GetDefaultPrinter()
 
 
-def get_printer_status(printer_handle):
-    info_dict = win32print.GetPrinter(printer_handle, 2)
+
+
+def get_printer_status(printer_name: str) -> Dict[str, str | list[str]]:
+    # TODO: Make this a try-except instead of if-else.
+    if printer_name not in get_printers():
+        raise FileNotFoundError(f"Could not find printer with name: {printer_name}")
+
+    with PrinterHandle(printer_name) as printer_handle:
+        info_dict = win32print.GetPrinter(printer_handle, 2)
     return {
         "name": info_dict.get("pPrinterName"),
         "port": info_dict.get("pPortName"),
@@ -115,14 +126,13 @@ def generate_print_command(
 
 
 def print_file(
-    printer_handle,
+    printer_name,
     filename: str,
     has_color: bool = True,
     num_copies: int = 1,
     page_start: int = 0,
     page_end: int = 0,
 ):
-    printer_name = get_printer_status(printer_handle)["name"]
     fpath = Path(filename).resolve()
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")

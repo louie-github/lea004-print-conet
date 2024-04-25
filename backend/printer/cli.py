@@ -7,6 +7,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
+from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -18,11 +19,16 @@ from .printing import (
     PrinterHandle,
     get_default_printer,
     get_printer_status,
+    get_printers,
     print_file,
 )
 
 # API portion
 app = FastAPI()
+
+
+class PrintConfiguration(BaseModel):
+    printer_name: Optional[str] = Field(default=None)
 
 
 class PrintJob(BaseModel):
@@ -39,9 +45,20 @@ class FileConvertJob(BaseModel):
 
 
 @app.get("/status")
-async def read_status():
+async def read_status(printer_name: Optional[str] = None):
     try:
-        return get_printer_status(app.state.printer_handle)
+        if printer_name is None:
+            printer_name = app.state.printer_name
+        return {
+            "message": "Successfully read printer status.",
+            "printer_name": printer_name,
+            "status": get_printer_status(printer_name),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            400,
+            {"message": "Printer could not be found.", "printer_name": printer_name},
+        )
     except AttributeError:
         raise HTTPException(
             404,
@@ -167,20 +184,19 @@ def cli_main(printer_handle):
 
 
 def main(args=__import__("sys").argv[1:]):
-    printer = None
+    printer_name = None
     run_api = "api" in args
 
     logging.basicConfig(format="[%(levelname)s] %(message)s", level=logging.INFO)
 
-    if not printer:
+    if not printer_name:
         logging.info("No printer specified; using default printer.")
-        printer = get_default_printer()
+        printer_name = get_default_printer()
 
-    with PrinterHandle(printer) as printer_handle:
-        cli_main(printer_handle)
-        app.state.printer_handle = printer_handle
-        if run_api:
-            uvicorn.run(app, host="0.0.0.0", port=48250)
+    app.state.printer_name = printer_name
+    cli_main(app.state.printer_name)
+    if run_api:
+        uvicorn.run(app, host="0.0.0.0", port=48250)
 
 
 if __name__ == "__main__":
