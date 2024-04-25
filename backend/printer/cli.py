@@ -71,6 +71,43 @@ async def read_status(printer_name: Optional[str] = None):
         )
 
 
+@app.get("/list_printers")
+async def list_printers():
+    return {
+        "printers": get_printers(),
+    }
+
+
+@app.post("/configure")
+async def select_printer(config: PrintConfiguration):
+    try:
+        if config.printer_name is None:
+            app.state.printer_name = get_default_printer()
+        else:
+            app.state.printer_name = config.printer_name
+        return {
+            "message": "Printer configuration set successfully.",
+            "status": get_printer_status(app.state.printer_name),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            400,
+            {
+                "message": "Printer could not be found.",
+                "config": jsonable_encoder(config),
+            },
+        )
+    except Exception as e:
+        raise HTTPException(
+            500,
+            {
+                "message": "An error occurred while configuring printer settings.",
+                "exception": e,
+                "config": jsonable_encoder(config),
+            },
+        )
+
+
 def check_file_locked(filename: str):
     try:
         f = open(filename, "rb")

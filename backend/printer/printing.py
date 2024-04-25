@@ -71,6 +71,13 @@ def get_default_printer():
     return win32print.GetDefaultPrinter()
 
 
+def get_printers() -> List[str]:
+    return [
+        printer_info["pPrinterName"]
+        for printer_info in win32print.EnumPrinters(
+            win32print.PRINTER_ENUM_LOCAL, None, 2
+        )
+    ]
 
 
 def get_printer_status(printer_name: str) -> Dict[str, str | list[str]]:
