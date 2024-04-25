@@ -3,9 +3,13 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="{{ route('home') }}" target="_blank">
-            <img src="{{ asset('./img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-1 font-weight-bold">PRINT CO-NET WEB</span>
+        <a class="navbar-brand m-0 d-flex align-items-center" href="{{ route('home') }}" target="_blank">
+            <picture>
+                <source srcset="{{ Vite::asset('resources/images/icons/print-conet-logo.svg') }}">
+                <img class="navbar-brand-img h-100" alt="main_logo"
+                     src="{{ Vite::asset('resources/images/icons/print-conet-logo.svg') }}">
+            </picture>
+            <h6 class="ms-2 mt-1 mb-0">Print CoNet</h6>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
