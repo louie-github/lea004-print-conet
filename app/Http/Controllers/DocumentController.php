@@ -26,14 +26,14 @@ class DocumentController extends Controller
         return $response;
     }
 
-    protected function convertOfficeFile(string $filePath) {
-        $backendUrl = config('backend_url');
-        $response = Http::post("$backendUrl/convert", [
-            "filename" => $filePath
+    protected function convertOfficeFile(string $file, string $fileExtension) {
+        $backendUrl = config('app.backend_url');
+        $response = Http::timeout(30)->post("$backendUrl/convert", [
+            "data" => base64_encode($file),
+            "extension" => $fileExtension,
         ]);
         if ($response->status() === 200) {
-            Storage::delete($filePath);
-            return $response->json()['filename'];
+            return base64_decode($response->json()['data']);
         } else {
             return null;
         }
@@ -47,15 +47,18 @@ class DocumentController extends Controller
         $file = $request->file('file');
         // Detect via MIME type instead of using client extension
         $fileExtension = $file->extension();
-        $publicFilePath = $file->storePublicly('files');
+        $publicFilePath = null;
         switch ($fileExtension) {
             case 'pdf':
+                $publicFilePath = $file->storePublicly(public_path('files'));
                 break; // Do nothing.
             case 'doc':
             case 'docx':
             case 'xlsx':
             case 'csv':
-                $publicFilePath = $this->convertOfficeFile($publicFilePath);
+                // TODO: Run in background
+                $publicFilePath = public_path('files') . '/' . $file->hashName() . '.pdf';
+                Storage::put($publicFilePath, $this->convertOfficeFile($file->get(), $fileExtension));
                 if (is_null($publicFilePath)) {
                     return back()->with('error', 'Failed to convert document.');
                 }

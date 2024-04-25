@@ -58,7 +58,7 @@ php artisan migrate:fresh --seed
 ```
 
 Also, enable and link the public storage folder:
-```
+```bash
 php artisan storage:link
 ```
 
