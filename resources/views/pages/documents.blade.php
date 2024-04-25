@@ -11,13 +11,15 @@
                             <div class="col">
                                 <h6 class="mb-0">Document Information</h6>
                             </div>
-                            <div class="col text-end text-nowrap">
-                                <a class="btn btn-primary mb-0"
-                                   data-bs-toggle="modal" data-bs-target="#addFileModal">
-                                    <i class="fas fa-plus"></i>
-                                    &nbsp;&nbsp;Upload
-                                </a>
-                            </div>
+                            @if (!auth()->user()->is_admin)
+                                <div class="col text-end text-nowrap">
+                                    <a class="btn btn-primary mb-0"
+                                    data-bs-toggle="modal" data-bs-target="#addFileModal">
+                                        <i class="fas fa-plus"></i>
+                                        &nbsp;&nbsp;Upload
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div id="alert">
@@ -28,36 +30,43 @@
                             @foreach ($documents as $document)
                                 <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
                                     <div class="d-flex flex-column">
-                                        <a class="btn btn-link p-0 m-0 text-start"
-                                            href="{{ route('document.show', ['document' => $document->id]) }}">
-                                            <h6 class="mb-3 text-sm "><i class="fas fa-file-csv text-lg me-1"></i>
-                                                {{ $document->name }}</h6>
-                                        </a>
+                                        @if (!auth()->user()->is_admin)
+                                            <a class="btn btn-link p-0 m-0 text-start"
+                                                href="{{ route('document.show', ['document' => $document->id]) }}">
+                                                <h6 class="mb-3 text-sm "><i class="fas fa-file-csv text-lg me-1"></i>
+                                                    {{ $document->name }}</h6>
+                                            </a>
+                                        @else
+                                            <div class="btn btn-link p-0 m-0 text-start">
+                                                <h6 class="mb-3 text-sm "><i class="fas fa-file-csv text-lg me-1"></i>
+                                                    {{ $document->name }}</h6>
+                                            </div>
+                                        @endif
                                         <div class="d-flex flex-row justify-content-between">
                                             <div class="d-flex flex-column">
-                                                <span class="text-xs">Added: <span
-                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->created_at }}</span></span>
-                                                {{-- <span class="text-xs">Total Page/s: <span
-                                                        class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span></span> --}}
+                                                <span class="text-xs">Added:
+                                                    <span class="text-dark ms-sm-2 font-weight-bold">{{ $document->created_at }}</span>
+                                                </span>
+                                                <span class="text-xs">Total Page/s:
+                                                    <span class="text-dark ms-sm-2 font-weight-bold">{{ $document->total_pages }}</span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ms-auto text-end">
-                                        @if (auth()->user()->is_admin)
-                                            <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;">
-                                                <i class="far fa-trash-alt me-2"></i>
-                                                Delete
-                                            </a>
-                                        @endif
+                                        <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;">
+                                            <i class="far fa-trash-alt me-2"></i>
+                                            Delete
+                                        </a>
 
                                         @if (!auth()->user()->is_admin)
                                             <a class="btn btn-link text-dark px-3 mb-0"
-                                                href="{{ route('document.show', ['document' => $document->id]) }}"><i
-                                                    class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
+                                                href="{{ route('document.show', ['document' => $document->id]) }}">
+                                                <i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>
+                                                View
+                                            </a>
                                         @endif
                                     </div>
-
-
                                 </li>
                             @endforeach
                         </ul>
@@ -156,9 +165,15 @@
                         </div>
                         <p>
                             <small>
-                                Word (.doc, .docx) and Excel (.xls, .xlsx, .csv) files
-                                will be converted internally to PDF. For the best and
-                                most accurate results, please upload a PDF directly.
+                                Word and Excel files will be converted to PDF. Please
+                                set your print settings (page size, margins, etc.)
+                                <strong>before uploading</strong> your document.
+                            </small>
+                        </p>
+                        <p>
+                            <small>
+                                For the best and most accurate results, please upload a
+                                PDF directly.
                             </small>
                         </p>
                     </form>
