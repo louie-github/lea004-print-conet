@@ -7,6 +7,7 @@
                     <script>
                         document.write(new Date().getFullYear())
                     </script>,
+                    the Print CoNet developers (LEA004 2023-2024)
                     {{-- made with <i class="fa fa-heart"></i> by
                     <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
                     &
