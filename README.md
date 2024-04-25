@@ -12,7 +12,7 @@ This starts up a MariaDB container as well as a container for the main applicati
 Note that this is not yet suitable for development work. If you change
 the contents of files, it will not be reflected.
 
-## Installation
+## Installation (Frontend)
 
 First, clone this repository and check out the correct branch.
 ```bash
@@ -38,8 +38,20 @@ cp .env.example .env
 Importantly, change the line below to match the URL at which you will be
 hosting the web app:
 ```ini
-KIOSK_URL=https://print-conet.947825.xyz
+APP_URL="https://print-conet.947825.xyz"
 ```
+The KIOSK_URL field will then be filled automatically (see the
+[example file](.env.example)).
+
+You can also change the line below to match the URL at which the
+backend APIs will be hosted:
+```ini
+BACKEND_URL="http://127.0.0.1:48250"
+```
+This is especially useful if you are running the frontend in WSL while
+the backend is running on Windows. In that case, please change the IP
+address to the value detailed in the [WSL docs](https://learn.microsoft.com/en-us/windows/wsl/networking)
+to access the backend API properly.
 
 Moreover, you should also change the lines below to match your database
 setup:
@@ -61,6 +73,8 @@ Also, enable and link the public storage folder:
 ```bash
 php artisan storage:link
 ```
+On Windows, this will require either administrator permissions or for
+Developer Mode to be enabled.
 
 
 Then, install the necessary Node modules:
@@ -109,6 +123,50 @@ frankenphp is configured as the default web server. Ensure that it is
 installed on your system, then run:
 ```bash
 php artisan octane:start
+```
+
+## Installation (Backend)
+### Print API
+To run the backend printing and document conversion APIs, first install
+[Python](https://www.python.org/) version 3.10 or higher as well as
+[Poetry](https://python-poetry.org/) for dependency management.
+
+For the document conversion APIs, please ensure as well that Microsoft
+Word and Microsoft Excel have been installed.
+
+Then, navigate to the [backend](backend/) directory and install the
+project dependencies:
+```bash
+poetry install
+```
+
+Then, start the API, which by default will listen on all IP addresses
+(0.0.0.0):
+```bash
+poetry run cli api
+```
+Press Ctrl+C to stop the server.
+
+### Coin slot API
+To run the backend coin slot interface, ensure that [Node](https://nodejs.org/en)
+is installed, as well as npm.
+
+Then, navigate to the [backend/coinslot](backend/coinslot/) directory
+and install the project dependencies:
+```bash
+npm install
+```
+
+Then, start the coinslot API, which will automatically search for the
+Arduino serial port and start listening for matching values.
+```bash
+node index.js
+```
+
+You can optionally adjust the code to match the pulse payment route in
+the frontend web app:
+```js
+const PULSE_ENDPOINT = "http://localhost:8000/pulsePayment";
 ```
 
 ## Initial Account
