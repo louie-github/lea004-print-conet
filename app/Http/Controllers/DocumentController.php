@@ -51,6 +51,9 @@ class DocumentController extends Controller
         switch ($fileExtension) {
             case 'pdf':
                 $publicFilePath = $file->storePublicly(public_path('files'));
+                if (!$publicFilePath) {
+                    return back()->with('error', 'Failed to upload document.');
+                }
                 break;
             case 'doc':
             case 'docx':
@@ -62,7 +65,9 @@ class DocumentController extends Controller
                 if (is_null($convertedFileContents)) {
                     return back()->with('error', 'Failed to convert document.');
                 }
-                Storage::put($publicFilePath, $convertedFileContents);
+                if (!Storage::put($publicFilePath, $convertedFileContents)) {
+                    return back()->with('error', 'Failed to upload document.');
+                }
                 break;
             default:
                 // TODO: Handle unsupported file extensions or other cases
