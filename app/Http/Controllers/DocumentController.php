@@ -51,17 +51,18 @@ class DocumentController extends Controller
         switch ($fileExtension) {
             case 'pdf':
                 $publicFilePath = $file->storePublicly(public_path('files'));
-                break; // Do nothing.
+                break;
             case 'doc':
             case 'docx':
             case 'xlsx':
             case 'csv':
                 // TODO: Run in background
                 $publicFilePath = public_path('files') . '/' . $file->hashName() . '.pdf';
-                Storage::put($publicFilePath, $this->convertOfficeFile($file->get(), $fileExtension));
-                if (is_null($publicFilePath)) {
+                $convertedFileContents = $this->convertOfficeFile($file->get(), $fileExtension);
+                if (is_null($convertedFileContents)) {
                     return back()->with('error', 'Failed to convert document.');
                 }
+                Storage::put($publicFilePath, $convertedFileContents);
                 break;
             default:
                 // TODO: Handle unsupported file extensions or other cases
