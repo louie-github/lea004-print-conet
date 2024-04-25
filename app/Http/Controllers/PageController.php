@@ -7,6 +7,7 @@ use App\Models\PrinterActivity;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PageController extends Controller
 {
@@ -45,8 +46,12 @@ class PageController extends Controller
                 return view("pages.{$page}", compact('users'));
                 break;
             case 'printer-activities':
-                $activities = PrinterActivity::latest()->get();
-                return view("pages.printer-activities", compact('activities'));
+                $backendUrl = config('app.backend_url');
+                $response = Http::get("$backendUrl/list_printers");
+                $printers = $response->json()['printers'];
+                sort($printers);
+                $selectedPrinter = $response->json()['selected_printer'];
+                return view("pages.printer-activities", compact('printers', 'selectedPrinter'));
                 break;
             default:
                 abort(404);

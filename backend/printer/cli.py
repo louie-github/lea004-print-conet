@@ -75,6 +75,7 @@ async def read_status(printer_name: Optional[str] = None):
 async def list_printers():
     return {
         "printers": get_printers(),
+        "selected_printer": app.state.printer_name
     }
 
 
