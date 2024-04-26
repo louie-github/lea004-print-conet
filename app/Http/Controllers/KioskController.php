@@ -92,7 +92,7 @@ class KioskController extends Controller
 
     public function print(Transaction $transaction)
     {
-        $backendUrl = config('backend_url');
+        $backendUrl = config('app.backend_url');
         $response = Http::post("$backendUrl/print", [
             "filename" => $transaction->document->url,
             "has_color" => $transaction->is_colored,
