@@ -167,7 +167,16 @@
     }, 500);
 
     function addAmount() {
-        fetch("{{ route('pulsePayment', ['transaction' => $transaction]) }}");
+        fetch("{{ route('pulsePayment', ['transaction' => $transaction]) }}", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                pulseValue: 1,
+            })
+        });
     }
 </script>
 

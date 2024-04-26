@@ -68,9 +68,10 @@ class KioskController extends Controller
 
     public function pulsePayment(Request $request)
     {
-        $transaction = $request->transaction;
+        $transaction = Transaction::find($request->transaction);
         $pulseValue = $request->pulseValue;
-        if (is_null($transaction)) {
+
+        if (is_null($request->transaction)) {
             $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
         }
         if (is_null($pulseValue)) {
