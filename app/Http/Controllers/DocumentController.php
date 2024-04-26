@@ -64,7 +64,7 @@ class DocumentController extends Controller
                 $publicFilePath = public_path('files') . '/' . $file->hashName() . '.pdf';
                 $convertedFileContents = $this->convertOfficeFile($file->get(), $fileExtension);
                 if (is_null($convertedFileContents)) {
-                    return back()->documentconwith('error', 'Failed to convert document.');
+                    return back()->with('error', 'Failed to convert document.');
                 }
                 if (!Storage::put($publicFilePath, $convertedFileContents)) {
                     return back()->with('error', 'Failed to upload document.');
