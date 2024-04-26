@@ -151,7 +151,7 @@
 </main>
 
 <script>
-    setInterval(function() {
+    var paymentCheckIntervalId = setInterval(function() {
         fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
             .then(response => response.json())
             .then(data => {
@@ -249,6 +249,7 @@
         const paymentForm = document.getElementById('paymentForm');
 
         printBtn.addEventListener('click', function() {
+            clearInterval(paymentCheckIntervalId);
             // TODO: Validate data
             // If validations pass, submit the form
             paymentForm.submit();
