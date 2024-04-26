@@ -32,7 +32,7 @@ class PrintConfiguration(BaseModel):
 
 
 class PrintJob(BaseModel):
-    filename: str
+    file_data: str
     has_color: bool = Field(default=True)
     page_start: int = Field(default=0)
     page_end: int = Field(default=0)
@@ -170,18 +170,15 @@ async def convert_office_file(job: FileConvertJob):
 
 @app.post("/print")
 async def queue_print_job(job: PrintJob):
-    job.filename = str(
-        (
-            Path(__file__).parent.parent.parent.resolve()
-            / "storage"
-            / "app"
-            / job.filename
-        ).resolve()
-    )
+    # Can't use context manager here. We can't open the file if Python
+    # also has it open, so we need to manually delete it after printing.
+    tempf = tempfile.NamedTemporaryFile('wb', suffix=".pdf", delete=False)
+    tempf.write(base64.b64decode(job.file_data))
+    tempf.close()
     try:
         print_file(
             app.state.printer_name,
-            job.filename,
+            tempf.name,
             has_color=job.has_color,
             page_start=job.page_start,
             page_end=job.page_end,
@@ -205,6 +202,8 @@ async def queue_print_job(job: PrintJob):
             "message": "Print job sent.",
             "job": jsonable_encoder(job),
         }
+    finally:
+        os.remove(tempf.name)
 
 
 def log_printer_status(printer_name):

@@ -15,8 +15,10 @@
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form role="form" id="paymentForm"
-                                action="{{ route('kiosk.print', ['transaction' => $transaction]) }}">
+                                <form role="form" id="paymentForm" method="POST" action="{{ route('kiosk.print') }}">
+                                    @csrf
+                                    <input type="hidden" name="transactionId"
+                                           value="{{ $transaction->id }}">
                                     <div id="transactionDetails" class="mb-1">
                                         Transaction ID: {{ $transaction->id }}
                                     </div>

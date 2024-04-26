@@ -144,7 +144,7 @@ def print_file(
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")
     if not is_readable_pdf(filename):
-        raise ValueError("Invalid PDF file: {fpath}")
+        raise ValueError(f"Invalid PDF file: {fpath}")
     command = generate_print_command(
         str(fpath),
         printer_name=printer_name,
