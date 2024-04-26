@@ -41,5 +41,5 @@ node index.js
 You can optionally adjust the code to match the pulse payment route in
 the frontend web app:
 ```js
-const PULSE_ENDPOINT = "http://localhost:8000/pulsePayment";
+const PULSE_ENDPOINT = "http://localhost:8000/api/pulsePayment";
 ```

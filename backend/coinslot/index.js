@@ -10,7 +10,7 @@ const fetch = fetchRetry(global.fetch, {
 
 const PULSE_1_LINE = "+"; // Coin acceptor: 1 pulse = 1 PHP
 const PULSE_10_LINE = "0"; // Bill acceptor: 1 pulse = 10 PHP
-const PULSE_ENDPOINT = "http://localhost:8000/pulsePayment";
+const PULSE_ENDPOINT = "http://localhost:8000/api/pulsePayment";
 
 let arduinoPath = null;
 let callCount = 0;
