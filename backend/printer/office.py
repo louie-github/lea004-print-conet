@@ -24,8 +24,7 @@ def convert_word(filename: str, output_filename: str):
         Append=False,
     )
     document.Close()
-    # Keep Word open so subsequent calls aren't as slow.
-    # word.Quit()
+    word.Quit()
     return output_filename
 
 
@@ -41,8 +40,7 @@ def convert_excel(filename: str, output_filename: str):
         ActivePrinter="Microsoft Print to PDF",
     )
     workbook.Close()
-    # Keep Excel open so subsequent calls aren't as slow.
-    # excel.Quit()
+    excel.Quit()
     return output_filename
 
 
