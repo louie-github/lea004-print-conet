@@ -73,20 +73,22 @@
                         <div class="d-flex flex-column mb-3">
                             <span class="text-xs mb-2">Prices:
                                 <div>
-                                    <span class="text-dark ms-sm-2 font-weight-bold">Colored: ₱
-                                        {{ $price->colored_price }}</span>
+                                    <span class="text-dark ms-sm-2 font-weight-bold">
+                                        Colored: ₱{{ $price->colored_price }}.00
+                                    </span>
                                 </div>
                                 <div>
-                                    <span class="text-dark ms-sm-2 font-weight-bold">Black & White: ₱
-                                        {{ $price->black_and_white_price }}</span>
+                                    <span class="text-dark ms-sm-2 font-weight-bold">
+                                        Black & White: ₱{{ $price->black_and_white_price }}.00
+                                    </span>
                                 </div>
                             </span>
                             <!-- Placeholder for dynamic description -->
-                            <span class="text-xs">Description
+                            <span class="text-xs">Description:
                                 <span class="text-dark ms-sm-2 font-weight-bold" id="colorDescription">
                                     {{ $document->total_pages }} pages (Black and White)</span>
                             </span>
-                            <span class="mb-2 text-xs">TOTAL: 
+                            <span class="mb-2 text-xs">TOTAL:
                                 <span id="totalAmount" class="text-dark font-weight-bold ms-sm-2"> ₱  {{$document->total_pages * $price->black_and_white_price}}</span>
                                 <!-- Hidden input for request body -->
                                 <input type="hidden" class="form-control" id="totalAmountInput" name="total_amount" value="">
