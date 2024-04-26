@@ -160,23 +160,45 @@
                             <div id="pageRangeSliderContainer"></div>
                         </div> --}}
                         <div class="mt-4 d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="submit" class="btn btn-primary">
+                                Upload
+                            </button>
                             <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
                         </div>
-                        <p>
-                            <small>
-                                Word and Excel files will be converted to PDF. Please
-                                set your print settings (page size, margins, etc.)
-                                <strong>before uploading</strong> your document.
-                            </small>
-                        </p>
-                        <p>
-                            <small>
-                                For the best and most accurate results, please upload a
-                                PDF directly.
-                            </small>
-                        </p>
+                        <div class="mt-2 ms-1">
+                            <p>
+                                <small>
+                                    Word and Excel files will be converted to PDF. Please
+                                    set your print settings (page size, margins, etc.)
+                                    <strong>before uploading</strong> your document.
+                                </small>
+                            </p>
+                            <p>
+                                <small>
+                                    For the best and most accurate results, upload a PDF file.
+                                </small>
+                            </p>
+                            <h6 class="text-center">
+                                Do not close this tab until your document has finished
+                                uploading. This may take some time.
+                            </h6>
+                        </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form submit modal -->
+    <div class="modal fade" id="formSubmitModal" tabindex="-1" aria-labelledby="formSubmitModalLabel"
+        data-dismiss="modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formSubmitModalLabel">Form submitted</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Please wait for your file to be uploaded and processed.</p>
                 </div>
             </div>
         </div>
