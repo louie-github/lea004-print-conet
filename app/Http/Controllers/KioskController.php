@@ -66,14 +66,19 @@ class KioskController extends Controller
 
     public function pulsePayment(Request $request)
     {
+        $transaction = $request->transaction;
         $pulseValue = $request->pulseValue;
-        if (is_null($request->transaction)) {
+        if (is_null($transaction)) {
             $transaction = Transaction::find(Cache::get('ACTIVE-TRANSACTION-ID'));
         }
         if (is_null($pulseValue)) {
             $pulseValue = 1;
         }
         // TODO: Add idempotency check
+
+        if (is_null($transaction)) {
+            return response()->json(['message' => 'Could not find an active transaction.'], 404);
+        }
 
         DB::transaction(function () use ($transaction, $pulseValue) {
             $transaction->increment('amount_collected', $pulseValue);
