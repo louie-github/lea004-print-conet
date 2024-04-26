@@ -10,12 +10,16 @@
                         <h5>Printer Status</h5>
                     </div>
                     <div class="card-body pt-3">
-                        <form action="">
+                        <div id="alert">
+                            @include('components.alert')
+                        </div>
+                        <form action="{{ route('configurePrinting') }}" method="POST">
+                            @csrf
                             <div class="row">
                                 <label for="printerSelect" class="col-auto col-form-label pe-0">
                                     <h6>Select printer:</h6>
                                 </label>
-                                <div class="col-9">
+                                <div class="col-6">
                                     <select class="form-select" name="printerSelect" id="printerSelect"
                                             onchange="setDetails();">
                                         @foreach ($printers as $printer)
@@ -26,6 +30,11 @@
                                             @endif
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="col-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        Set as active
+                                    </button>
                                 </div>
                             </div>
                         </form>

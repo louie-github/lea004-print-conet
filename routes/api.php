@@ -31,6 +31,9 @@ Route::get('/printerStatus/{printerName?}', function (?string $printerName = nul
     }
 })->name('printerStatus');
 
+Route::post('/configurePrinting', [KioskController::class, 'configurePrinting'])
+    ->name('configurePrinting');
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

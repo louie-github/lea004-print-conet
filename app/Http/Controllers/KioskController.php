@@ -91,6 +91,18 @@ class KioskController extends Controller
         return response()->json(['transaction_id' => $transaction->id], 200);
     }
 
+    public function configurePrinting(Request $request) {
+        $backendUrl = config('app.backend_url');
+        $response = Http::post("$backendUrl/configure", [
+            'printer_name' => $request->printerSelect
+        ]);
+        if ($response->status() === 200) {
+            return back()->with('succes', 'Successfully set active printer.');
+        } else {
+            return back()->with('error', 'An error occurred while setting the active printer.');
+        }
+    }
+
     public function print(Transaction $transaction)
     {
         $backendUrl = config('app.backend_url');
