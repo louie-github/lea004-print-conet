@@ -15,7 +15,8 @@ class DocumentController extends Controller
     public function pdfViewer($id)
     {
         $document = Document::findOrFail($id);
-        $path = Storage::path($document->url);
+        // Ignore method not found error. This exists.
+        $path = Storage::disk('public')->path($document->url);
 
         if (!file_exists($path)) {
             abort(404, 'File not found');
@@ -51,7 +52,7 @@ class DocumentController extends Controller
         $publicFilePath = null;
         switch ($fileExtension) {
             case 'pdf':
-                $publicFilePath = $file->storePublicly(public_path('files'));
+                $publicFilePath = $file->storePublicly('files', ['disk' => 'public']);
                 if (!$publicFilePath) {
                     return back()->with('error', 'Failed to upload document.');
                 }
@@ -61,12 +62,12 @@ class DocumentController extends Controller
             case 'xlsx':
             case 'csv':
                 // TODO: Run in background
-                $publicFilePath = public_path('files') . '/' . $file->hashName() . '.pdf';
+                $publicFilePath = 'files/' . $file->hashName() . '.pdf';
                 $convertedFileContents = $this->convertOfficeFile($file->get(), $fileExtension);
                 if (is_null($convertedFileContents)) {
                     return back()->with('error', 'Failed to convert document.');
                 }
-                if (!Storage::put($publicFilePath, $convertedFileContents)) {
+                if (!Storage::disk('public')->put($publicFilePath, $convertedFileContents)) {
                     return back()->with('error', 'Failed to upload document.');
                 }
                 break;
@@ -113,7 +114,7 @@ class DocumentController extends Controller
 
     private function getPageCount($fileExtension, $filePath)
     {
-        $filePath = storage_path('app/' . $filePath);
+        $filePath = public_path('storage/' . $filePath);
 
         switch ($fileExtension) {
             case 'pdf':

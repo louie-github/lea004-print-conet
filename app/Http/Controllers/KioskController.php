@@ -109,7 +109,7 @@ class KioskController extends Controller
         $transaction = Transaction::find($request->transactionId);
         $backendUrl = config('app.backend_url');
         $response = Http::post("$backendUrl/print", [
-            "file_data" => base64_encode(Storage::get($transaction->document->url)),
+            "file_data" => base64_encode(Storage::disk('public')->get($transaction->document->url)),
             "has_color" => $transaction->is_colored,
             "page_start" => $transaction->page_start,
             "page_end" => $transaction->page_end,
