@@ -31,7 +31,6 @@ class TransactionController extends Controller
      */
     public function store(Request $request, Document $document)
     {
-        $this->getWordPages();
         $dbTransaction = DB::transaction(function () use ($document, $request) {
             $pageRange = $request->page_range;
             if (!str_contains($pageRange, '-')) {

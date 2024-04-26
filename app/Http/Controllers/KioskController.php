@@ -56,12 +56,14 @@ class KioskController extends Controller
 
     public function printPreview(Request $request, Transaction $transaction)
     {
-        return view('pages.kiosk.print-preview', compact('transaction'));
+        $document = $transaction->document;
+        return view('pages.kiosk.print-preview', compact('transaction', 'document'));
     }
 
     public function payment(Request $request, Transaction $transaction)
     {
-        return view('pages.kiosk.payment', compact('transaction'));
+        $document = $transaction->document;
+        return view('pages.kiosk.payment', compact('transaction', 'document'));
     }
 
     public function pulsePayment(Request $request)
