@@ -180,7 +180,7 @@ async def queue_print_job(job: PrintJob):
     )
     try:
         print_file(
-            app.state.printer_handle,
+            app.state.printer_name,
             job.filename,
             has_color=job.has_color,
             page_start=job.page_start,
@@ -207,8 +207,8 @@ async def queue_print_job(job: PrintJob):
         }
 
 
-def log_printer_status(printer_handle):
-    printer_status = get_printer_status(printer_handle)
+def log_printer_status(printer_name):
+    printer_status = get_printer_status(printer_name)
     logging.info("Printer status:")
     logging.info(f'  - Name: {printer_status["name"]}')
     logging.info(f'  - Port: {printer_status["port"]}')
@@ -217,8 +217,8 @@ def log_printer_status(printer_handle):
     logging.info(f'  - Number of jobs: {printer_status["jobs"]}')
 
 
-def cli_main(printer_handle):
-    log_printer_status(printer_handle)
+def cli_main(printer_name):
+    log_printer_status(printer_name)
 
 
 def main(args=__import__("sys").argv[1:]):
