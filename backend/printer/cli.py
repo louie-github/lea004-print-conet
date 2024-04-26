@@ -110,6 +110,8 @@ async def select_printer(config: PrintConfiguration):
 
 
 def check_file_locked(filename: str):
+    # From: https://blogs.blumetech.com/blumetechs-tech-blog/2011/05/python-file-locking-in-windows.html
+    # Found via StackOverflow: https://stackoverflow.com/a/63761161
     try:
         f = open(filename, "rb")
         f.close()
