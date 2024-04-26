@@ -54,11 +54,16 @@
                                         </div>
                                     </div>
                                     <div class="ms-auto text-end">
-                                        <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;">
-                                            <i class="far fa-trash-alt me-2"></i>
-                                            Delete
-                                        </a>
-
+                                        <form action="{{ route('document.destroy', ['document' => $document]) }}"
+                                              method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-link text-danger text-gradient px-1 mb-0"
+                                                    type="submit">
+                                                <i class="far fa-trash-alt me-2"></i>
+                                                Delete
+                                            </button>
+                                        </form>
                                         @if (!auth()->user()->is_admin)
                                             <a class="btn btn-link text-dark px-3 mb-0"
                                                 href="{{ route('document.show', ['document' => $document->id]) }}">

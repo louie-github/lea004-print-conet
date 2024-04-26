@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Price;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -63,7 +64,7 @@ class DocumentController extends Controller
                 $publicFilePath = public_path('files') . '/' . $file->hashName() . '.pdf';
                 $convertedFileContents = $this->convertOfficeFile($file->get(), $fileExtension);
                 if (is_null($convertedFileContents)) {
-                    return back()->with('error', 'Failed to convert document.');
+                    return back()->documentconwith('error', 'Failed to convert document.');
                 }
                 if (!Storage::put($publicFilePath, $convertedFileContents)) {
                     return back()->with('error', 'Failed to upload document.');
@@ -83,7 +84,7 @@ class DocumentController extends Controller
             'total_pages' => $pageCount,
         ]);
 
-        return back()->with('succes', 'Document succesfully uploaded');
+        return back()->with('succes', 'Document successfully uploaded.');
     }
 
     /**
@@ -93,6 +94,21 @@ class DocumentController extends Controller
     {
         $price = Price::first();
         return view('pages.documents.viewFile', compact('document', 'price'));
+    }
+
+    public function destroy(Document $document) {
+        $numDeleted = DB::transaction(function() use ($document) {
+            return Document::destroy($document->id);
+        });
+        if ($numDeleted === 1) {
+            return back()->with('succes', 'Document has been deleted.');
+        } else {
+            return back()->with(
+                'error',
+                "An unexpected error was encountered while deleting the document.
+                (returned $numDeleted)"
+            );
+        }
     }
 
     private function getPageCount($fileExtension, $filePath)
