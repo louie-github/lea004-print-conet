@@ -80,6 +80,10 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::put('price/{id}', [PriceControlller::class, 'update'])->name('price.update');
 
+	Route::middleware(['admin'])->post(
+		'/configurePrinting', [KioskController::class, 'configurePrinting']
+	)->name('configurePrinting');
+
 	// Make sure this is last so that routes do not get overridden.
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 });

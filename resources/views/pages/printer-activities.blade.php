@@ -10,9 +10,6 @@
                         <h5>Printer Status</h5>
                     </div>
                     <div class="card-body pt-3">
-                        <div id="alert">
-                            @include('components.alert')
-                        </div>
                         <form action="{{ route('configurePrinting') }}" method="POST">
                             @csrf
                             <div class="row">
@@ -65,6 +62,9 @@
                                 <h6 class="my-0 ms-1 font-weight-normal" id="printerJobs"></h6>
                             </li>
                         </ul>
+                    </div>
+                    <div id="alert">
+                        @include('components.alert')
                     </div>
                 </div>
             </div>
