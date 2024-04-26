@@ -33,27 +33,27 @@
                         <ul class="list-group list-group-flush ms-3 w-90">
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Name: </h6>
-                                <p class="my-0 ms-1" id="printerName"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerName"></h6>
                             </li>
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Port: </h6>
-                                <p class="my-0 ms-1" id="printerPort"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerPort"></h6>
                             </li>
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Driver: </h6>
-                                <p class="my-0 ms-1" id="printerDriver"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerDriver"></h6>
                             </li>
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Status: </h6>
-                                <p class="my-0 ms-1" id="printerStatus"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerStatus"></h6>
                             </li>
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Raw status code: </h6>
-                                <p class="my-0 ms-1" id="printerRawStatus"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerRawStatus"></h6>
                             </li>
                             <li class="list-group-item d-flex">
                                 <h6 class="my-0">Jobs: </h6>
-                                <p class="my-0 ms-1" id="printerJobs"></p>
+                                <h6 class="my-0 ms-1 font-weight-normal" id="printerJobs"></h6>
                             </li>
                         </ul>
                     </div>
