@@ -87,11 +87,21 @@ def get_printer_status(printer_name: str) -> Dict[str, str | list[str]]:
 
     with PrinterHandle(printer_name) as printer_handle:
         info_dict = win32print.GetPrinter(printer_handle, 2)
+
+    # Windows, for some reason, has two ways to check if a printer is
+    # offline. We have to handle both.
+    # https://stackoverflow.com/q/41437023/8646315
+    printer_status_list = read_printer_status(info_dict.get("Status"))
+    if (
+        info_dict.get("Attributes") & win32print.PRINTER_ATTRIBUTE_WORK_OFFLINE
+    ) and "OFFLINE" not in printer_status_list:
+        printer_status_list.append("OFFLINE")
+
     return {
         "name": info_dict.get("pPrinterName"),
         "port": info_dict.get("pPortName"),
         "driver": info_dict.get("pDriverName"),
-        "status": read_printer_status(info_dict.get("Status")),
+        "status": printer_status_list,
         "raw_status": info_dict.get("Status"),
         "jobs": info_dict.get("cJobs"),
     }
