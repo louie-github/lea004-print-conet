@@ -119,8 +119,8 @@ class KioskController extends Controller
         if ($response->status() === 200) {
             return back()->with("succes", "Your print job has been sent.");
         } else {
-            $error = $response->json()['message'];
-            return back()->with("error", "Unknown error: $error");
+            $error = $response->json()['detail']['message'];
+            return back()->with("error", $error);
         }
     }
 

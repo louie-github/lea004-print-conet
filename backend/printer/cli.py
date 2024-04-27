@@ -73,10 +73,7 @@ async def read_status(printer_name: Optional[str] = None):
 
 @app.get("/list_printers")
 async def list_printers():
-    return {
-        "printers": get_printers(),
-        "selected_printer": app.state.printer_name
-    }
+    return {"printers": get_printers(), "selected_printer": app.state.printer_name}
 
 
 @app.post("/configure")
@@ -172,9 +169,18 @@ async def convert_office_file(job: FileConvertJob):
 
 @app.post("/print")
 async def queue_print_job(job: PrintJob):
+    printer_status = get_printer_status(app.state.printer_name)["status"]
+    if "OFFLINE" in printer_status or "ERROR" in printer_status:
+        raise HTTPException(
+            503,
+            {
+                "message": "Printer is currently offline or in an ERROR state.",
+                "job": jsonable_encoder(job),
+            },
+        )
     # Can't use context manager here. We can't open the file if Python
     # also has it open, so we need to manually delete it after printing.
-    tempf = tempfile.NamedTemporaryFile('wb', suffix=".pdf", delete=False)
+    tempf = tempfile.NamedTemporaryFile("wb", suffix=".pdf", delete=False)
     tempf.write(base64.b64decode(job.file_data))
     tempf.close()
     try:
