@@ -117,7 +117,7 @@
                     <h5 class="modal-title" id="printStatusModalLabel">Print Status</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                @if ($message = session()->has('succes'))
+                @if ($message = session()->get('succes'))
                 <div class="modal-body">
                     <h4 class="text-center">Success!</h4>
                     <p class="text-center">Your print job has been sent.</p>
@@ -125,11 +125,12 @@
                 <div class="modal-footer">
                     <a type="button" class="btn btn-primary" href="/kiosk/qr">Finish</a>
                 </div>
-                @elseif ($message = session()->has('error'))
+                @elseif ($message = session()->get('error'))
                 <div class="modal-body">
                     <h4 class="text-center">Error!</h4>
                     <p class="text-center">
-                        The print job failed. Message from the server: {{ $message }}
+                        The print job failed. Message from the server:<br>
+                        {{ $message }}
                     </p>
                     <h4 class="text-center">Please try again.</h4>
                 </div>
@@ -151,22 +152,24 @@
 </main>
 
 <script>
-    var paymentCheckIntervalId = setInterval(function() {
-        fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
-            .then(response => response.json())
-            .then(data => {
-                const amountCollected = '₱' + data.transaction.amount_collected + ".00";
-                document.getElementById('amountCollected').innerText = amountCollected;
-                if (data.transaction.amount_collected >= data.transaction.amount_to_be_paid) {
-                    reachedTotal = true;
-                    const printBtn = document.getElementById("printBtn");
-                    printBtn.classList.remove("btn-default");
-                    printBtn.classList.add("btn-primary");
-                    printBtn.disabled = false;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }, 500);
+    document.addEventListener('DOMContentLoaded', function() {
+        window.paymentCheckIntervalId = setInterval(function() {
+            fetch("{{ route('transaction.show', ['transaction' => $transaction]) }}")
+                .then(response => response.json())
+                .then(data => {
+                    const amountCollected = '₱' + data.transaction.amount_collected + ".00";
+                    document.getElementById('amountCollected').innerText = amountCollected;
+                    if (data.transaction.amount_collected >= data.transaction.amount_to_be_paid) {
+                        reachedTotal = true;
+                        const printBtn = document.getElementById("printBtn");
+                        printBtn.classList.remove("btn-default");
+                        printBtn.classList.add("btn-primary");
+                        printBtn.disabled = false;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }, 500);
+    });
 
     function addAmount() {
         fetch("{{ route('pulsePayment', ['transaction' => $transaction]) }}", {
@@ -250,9 +253,14 @@
 
         printBtn.addEventListener('click', function() {
             clearInterval(paymentCheckIntervalId);
+
             // TODO: Validate data
             // If validations pass, submit the form
-            paymentForm.submit();
+
+            // NOTE: Delay for one second to let all payment checking 
+            // requests go through.
+            // This is janky, but we need it to get sessions to work.
+            setTimeout(() => {paymentForm.submit();}, 1000);
         });
     });
 </script>
