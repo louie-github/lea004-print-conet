@@ -1,7 +1,6 @@
 import { SerialPort } from "serialport";
 import { ReadlineParser } from "@serialport/parser-readline";
 import fetchRetry from "fetch-retry";
-import { v4 as uuidv4 } from "uuid";
 
 const fetch = fetchRetry(global.fetch, {
     retries: 5,
@@ -33,9 +32,9 @@ const port = new SerialPort({ path: arduinoPath, baudRate: 9600 }, (err) => {
 });
 console.log("Opened port at port:", arduinoPath);
 
-function processLine(line) {
-    line = line.trim();
-    pulseValue = null;
+function processLine(data) {
+    let line = data.toString().trim();
+    let pulseValue = null;
     if (line == PULSE_1_LINE) {
         pulseValue = 1;
     } else if (line == PULSE_10_LINE) {
@@ -48,7 +47,6 @@ function processLine(line) {
         fetch(PULSE_ENDPOINT, {
             method: "POST",
             body: JSON.stringify({
-                id: uuidv4(),
                 pulseValue: pulseValue,
             }),
         })
@@ -67,5 +65,5 @@ function processLine(line) {
 }
 
 // Use "\n" to be safe. Arduino ends lines with "\r\n" by default.
-const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
+const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));
 parser.on("data", processLine);
