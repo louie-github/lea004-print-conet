@@ -99,9 +99,12 @@ class DocumentController extends Controller
 
     public function destroy(Document $document) {
         $numDeleted = DB::transaction(function() use ($document) {
-            return Document::destroy($document->id);
+            foreach ($document->transactions as $transaction) {
+                $transaction->delete();
+            }
+            return $document->delete();
         });
-        if ($numDeleted === 1) {
+        if ($numDeleted == 1) {
             return back()->with('succes', 'Document has been deleted.');
         } else {
             return back()->with(

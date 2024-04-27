@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('page_range')->nullable();
             $table->integer('no_of_copies')->default(1);
-            $table->integer('total_pages')->default(0);            
+            $table->integer('total_pages')->default(0);
             $table->timestamps();
         });
     }
