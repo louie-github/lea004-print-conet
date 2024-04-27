@@ -23,10 +23,13 @@ def find_arduino_port():
 
 
 def route_caller():
-    while True:
-        item = CALL_QUEUE.get()
-        print(f"Received item: {item}")
-        requests.get(PAYMENT_ROUTE)
+    try:
+        while True:
+            item = CALL_QUEUE.get()
+            print(f"Received item: {item}")
+            requests.post(PAYMENT_ROUTE, json={"pulseValue": 1})
+            CALL_QUEUE.task_done()
+    except KeyboardInterrupt:
         CALL_QUEUE.task_done()
 
 
