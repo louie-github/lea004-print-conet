@@ -6,7 +6,6 @@ use App\Models\Document;
 use App\Models\PrinterActivity;
 use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class PageController extends Controller

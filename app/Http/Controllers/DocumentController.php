@@ -81,7 +81,7 @@ class DocumentController extends Controller
             'user_id' => auth()->user()->id,
             'url' => $publicFilePath,
             'name' => $request->name,
-            'page_range' => "1," . $pageCount,
+            'page_range' => "1," . $pageCount, // TODO: Do we need this?
             'total_pages' => $pageCount,
         ]);
 
@@ -122,14 +122,9 @@ class DocumentController extends Controller
         switch ($fileExtension) {
             case 'pdf':
                 return $this->countPdfPages($filePath);
-            case 'docx':
-                return $this->countWordPages($filePath);
-            case 'xlsx':
-                return $this->countExcelPages(request());
-            case 'csv':
-                return $this->countExcelPages(request());
             default:
-                return 0; // Handle unsupported file extensions or other cases
+                // TODO: Handle unsupported file extensions or other cases
+                return 0;
         }
     }
 }
