@@ -30,7 +30,7 @@ class DocumentController extends Controller
 
     protected function convertOfficeFile(string $file, string $fileExtension) {
         $backendUrl = config('app.backend_url');
-        $response = Http::timeout(30)->post("$backendUrl/convert", [
+        $response = Http::timeout(300)->post("$backendUrl/convert", [
             "data" => base64_encode($file),
             "extension" => $fileExtension,
         ]);
