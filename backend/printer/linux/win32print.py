@@ -79,9 +79,11 @@ def EnumPrinters(*args, **kwargs):
     ]
 
 
-def GetPrinter(printer_handle: LinuxPrinterHandle, *args, **kwargs) -> Dict[str, Union[str, int]]:
+def GetPrinter(
+    printer_handle: LinuxPrinterHandle, *args, **kwargs
+) -> Dict[str, Union[str, int]]:
     for printer in EnumPrinters():
-        if printer['pPrinterName'] == printer_handle.printer_name:
+        if printer["pPrinterName"] == printer_handle.printer_name:
             return printer
     else:
         raise NotImplementedError

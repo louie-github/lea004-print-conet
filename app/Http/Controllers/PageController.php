@@ -38,7 +38,13 @@ class PageController extends Controller
                     $transactions = $transactionsQuery->where('user_id', $user_id)->simplePaginate(10, ['*'], 'transactions');
                 }
 
-                return view("pages.{$page}", compact('documents', 'transactions'));
+                $response = Http::get(config('app.backend_url') . '/platform' );
+                $office_converter = "Unknown";
+                if ($response->status() === 200) {
+                    $office_converter = $response->json()['office_converter'];
+                }
+
+                return view("pages.{$page}", compact('documents', 'transactions', 'office_converter'));
                 break;
             case 'users':
                 $users = User::latest()->get();

@@ -178,6 +178,16 @@
                                     <strong>before uploading</strong> your document.
                                 </small>
                             </p>
+                            @if ($office_converter !== "Microsoft Office")
+                                <p>
+                                    <small>
+                                        NOTE: This server may not be able to convert your
+                                        documents perfectly. Fonts, images, and other
+                                        items in your document may not be rendered with
+                                        complete accuracy.
+                                    </small>
+                                </p>
+                            @endif
                             <p>
                                 <small>
                                     For the best and most accurate results, upload a PDF file.

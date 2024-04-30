@@ -15,7 +15,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
-if sys.platform == 'win32':
+if sys.platform == "win32":
     from .office import convert_office
 else:
     from .linux.office import convert_office
@@ -45,6 +45,18 @@ class PrintJob(BaseModel):
 class FileConvertJob(BaseModel):
     data: str
     extension: str
+
+
+@app.get("/platform")
+async def get_platform():
+    if sys.platform == "win32":
+        office_converter = "Microsoft Office"
+    else:
+        office_converter = "LibreOffice"
+    return {
+        "platform": sys.platform,
+        "office_converter": office_converter,
+    }
 
 
 @app.get("/status")
@@ -110,7 +122,7 @@ async def select_printer(config: PrintConfiguration):
 
 
 def check_file_locked(filename: str):
-    if sys.platform != 'win32':
+    if sys.platform != "win32":
         WindowsError = IOError
 
     # From: https://blogs.blumetech.com/blumetechs-tech-blog/2011/05/python-file-locking-in-windows.html

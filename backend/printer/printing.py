@@ -154,7 +154,7 @@ def print_file(
     page_start: int = 0,
     page_end: int = 0,
 ):
-    if sys.platform != 'win32':
+    if sys.platform != "win32":
         return True
 
     fpath = Path(filename).resolve()
