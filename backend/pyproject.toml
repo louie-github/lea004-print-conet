@@ -8,13 +8,13 @@ packages = [{ include = "printer" }, { include = "coinslot" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-pywin32 = "^306"
+pywin32 = { version = "^306", platform = "win32" }
 fastapi = "^0.109.2"
 uvicorn = { extras = ["standard"], version = "^0.27.1" }
 pypdf = "^4.1.0"
 pyserial = "^3.5"
 requests = "^2.31.0"
-comtypes = "^1.4.1"
+comtypes = { version = "^1.4.1", platform = "win32" }
 
 [tool.poetry.scripts]
 cli = 'printer.cli:main'

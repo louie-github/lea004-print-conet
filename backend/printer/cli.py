@@ -4,6 +4,7 @@
 import base64
 import logging
 import os
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -14,9 +15,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
-from .office import convert_office
+if sys.platform == 'win32':
+    from .office import convert_office
+else:
+    from .linux.office import convert_office
 from .printing import (
-    PrinterHandle,
     get_default_printer,
     get_printer_status,
     get_printers,
@@ -107,6 +110,9 @@ async def select_printer(config: PrintConfiguration):
 
 
 def check_file_locked(filename: str):
+    if sys.platform != 'win32':
+        WindowsError = IOError
+
     # From: https://blogs.blumetech.com/blumetechs-tech-blog/2011/05/python-file-locking-in-windows.html
     # Found via StackOverflow: https://stackoverflow.com/a/63761161
     try:

@@ -4,10 +4,14 @@
 import logging
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 from typing import Dict, List
 
-import win32print
+if sys.platform == "win32":
+    import win32print
+else:
+    from .linux import win32print
 
 from .pdf import get_num_pages, is_readable_pdf
 
@@ -150,6 +154,9 @@ def print_file(
     page_start: int = 0,
     page_end: int = 0,
 ):
+    if sys.platform != 'win32':
+        return True
+
     fpath = Path(filename).resolve()
     if not fpath.exists():
         raise FileNotFoundError(f"Could not find file: {fpath}")
