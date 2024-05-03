@@ -64,7 +64,12 @@ class KioskController extends Controller
     public function payment(Request $request, Transaction $transaction)
     {
         $document = $transaction->document;
-        return view('pages.kiosk.payment', compact('transaction', 'document'));
+
+        // Data used when showing print modal
+        $status = $request->query('status', null);
+        $message = $request->query('message', null);
+
+        return view('pages.kiosk.payment', compact('transaction', 'document', 'status', 'message'));
     }
 
     public function pulsePayment(Request $request)
@@ -117,11 +122,20 @@ class KioskController extends Controller
         ]);
 
         if ($response->status() === 200) {
-            return back()->with("succes", "Your print job has been sent.");
+            $status = "succes";
+            $message = "Your print job has been sent.";
         } else {
-            $error = $response->json()['detail']['message'];
-            return back()->with("error", $error);
+            $status = "error";
+            $message = $response->json()['detail']['message'];
         }
+
+        // Use query parameters instead of flashing the session data
+        // here to prevent polling from clearing the flashed message
+        return redirect()->route('kiosk.payment', [
+            'transaction' => $transaction,
+            'status' => $status,
+            'message' => $message,
+        ]);
     }
 
     public function cancelTransaction(Request $request)

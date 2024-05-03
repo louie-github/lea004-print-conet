@@ -108,7 +108,7 @@
     </div>
 
     <!-- Print status modal -->
-    @if (session()->has('succes') || session()->has('error'))
+    @if (!is_null($status) && !is_null($message))
     <div class="modal fade" id="printStatusModal" tabindex="-1" aria-labelledby="printStatusModal"
         data-dismiss="modal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -117,7 +117,7 @@
                     <h5 class="modal-title" id="printStatusModalLabel">Print Status</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                @if ($message = session()->get('succes'))
+                @if ($status === "succes")
                 <div class="modal-body">
                     <h4 class="text-center">Success!</h4>
                     <p class="text-center">Your print job has been sent.</p>
@@ -125,7 +125,7 @@
                 <div class="modal-footer">
                     <a type="button" class="btn btn-primary" href="/kiosk/qr">Finish</a>
                 </div>
-                @elseif ($message = session()->get('error'))
+                @elseif ($status === "error")
                 <div class="modal-body">
                     <h4 class="text-center">Error!</h4>
                     <p class="text-center">
