@@ -115,7 +115,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="printStatusModalLabel">Print Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 @if ($status === "succes")
                 <div class="modal-body">
@@ -142,9 +141,13 @@
             </div>
         </div>
     </div>
+    <!-- Script to activate print status modal on page load -->
     <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
-                (new bootstrap.Modal('#printStatusModal')).show();
+                (new bootstrap.Modal('#printStatusModal', {
+                    backdrop: 'static',
+                    keyboard: false,
+                })).show();
             });
     </script>
     @endif
