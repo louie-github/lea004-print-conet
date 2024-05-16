@@ -59,6 +59,7 @@ class DocumentController extends Controller
                 break;
             case 'doc':
             case 'docx':
+            case 'xls':
             case 'xlsx':
             case 'csv':
                 // TODO: Run in background
