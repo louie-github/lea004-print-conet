@@ -52,7 +52,7 @@
                                             Print
                                         </button>
                                     </div>
-                                    <div class="text-center">
+                                    <div class="text-center" hidden>
                                         <button type="button" id="printBtn"
                                             class="btn bg-gradient-secondary w-100 mt-4 mb-0"
                                             onclick="addAmount();">
