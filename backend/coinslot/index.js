@@ -7,9 +7,14 @@ const fetch = fetchRetry(global.fetch, {
     retryDelay: 1000,
 });
 
-const PULSE_1_LINE = "+"; // Coin acceptor: 1 pulse = 1 PHP
-const PULSE_10_LINE = "0"; // Bill acceptor: 1 pulse = 10 PHP
+const PULSE_VALUES = {
+    // Coin slot: 1 pulse = 1 PHP
+    "+": 1,
+    // Bill acceptor: 1 pulse = 10 PHP
+    "0": 10,
+}
 const PULSE_ENDPOINT = "http://localhost:8000/api/pulsePayment";
+const BAUD_RATE = 19200;
 
 let arduinoPath = null;
 let callCount = 0;
@@ -24,23 +29,21 @@ if (!arduinoPath) {
     process.exit(1);
 }
 
-const port = new SerialPort({ path: arduinoPath, baudRate: 9600 }, (err) => {
-    if (err) {
-        console.error("Error while opening port: ", err.message);
-        process.exit();
+const port = new SerialPort(
+    { path: arduinoPath, baudRate: BAUD_RATE },
+    (err) => {
+        if (err) {
+            console.error("Error while opening port: ", err.message);
+            process.exit();
+        }
     }
-});
+);
 console.log("Opened port at port:", arduinoPath);
 
 function processLine(data) {
     let line = data.toString().trim();
-    let pulseValue = null;
-    if (line == PULSE_1_LINE) {
-        pulseValue = 1;
-    } else if (line == PULSE_10_LINE) {
-        pulseValue = 10;
-    }
-    if (!(pulseValue === null)) {
+    pulseValue = PULSE_VALUES[line];
+    if (!(pulseValue === undefined)) {
         callCount += 1;
         console.log("Line match found: ", line);
         // TODO: Add retries.
