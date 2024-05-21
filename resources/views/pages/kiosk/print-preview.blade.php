@@ -175,41 +175,9 @@
             //cancel process modal
             document.getElementById('confirmCancelBtn').addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent default button behavior
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                // Get the transaction ID from the HTML element or a variable
-                const transactionId = '{{ $transaction->id ?? 'default_transaction_id' }}';
 
-                // Create an object with the data to send in the request
-                const data = {
-                    _token: csrfToken,
-                    transactionId: transactionId,
-                    cancellationReason: 'User cancelled the transaction' // Optional: Add a reason for cancellation
-                };
-
-                // Make a POST request using the fetch API
-                fetch('/kiosk/cancelled', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            // Add any other headers or authentication tokens as needed
-                        },
-                        body: JSON.stringify(data) // Convert the data object to JSON format
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                            return;
-                            console.log('Transaction cancellation request sent successfully.');
-                            // Optionally, display a success message or perform any additional actions
-                        } else {
-                            console.error('Error sending cancellation request:', response.status);
-                            // Handle error response from the API if needed
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error sending cancellation request:', error);
-                        // Handle network or other errors if the request fails
-                    });
+                // Redirect back to main kiosk page
+                window.location.href = '/kiosk';
 
                 // Close the modal after cancellation
                 var myModal = bootstrap.Modal.getInstance(document.getElementById(
