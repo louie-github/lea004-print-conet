@@ -11,8 +11,8 @@ const PULSE_VALUES = {
     // Coin slot: 1 pulse = 1 PHP
     "+": 1,
     // Bill acceptor: 1 pulse = 10 PHP
-    "0": 10,
-}
+    0: 10,
+};
 const PULSE_ENDPOINT = "http://localhost:8000/api/pulsePayment";
 const BAUD_RATE = 19200;
 
@@ -49,6 +49,10 @@ function processLine(data) {
         // TODO: Add retries.
         fetch(PULSE_ENDPOINT, {
             method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 pulseValue: pulseValue,
             }),
