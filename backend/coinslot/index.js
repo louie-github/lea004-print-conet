@@ -42,7 +42,7 @@ console.log("Opened port at port:", arduinoPath);
 
 function processLine(data) {
     let line = data.toString().trim();
-    pulseValue = PULSE_VALUES[line];
+    let pulseValue = PULSE_VALUES[line];
     if (!(pulseValue === undefined)) {
         callCount += 1;
         console.log("Line match found: ", line);
